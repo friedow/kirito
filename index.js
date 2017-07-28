@@ -12,6 +12,13 @@ ApiClient.Dispatcher.on(Events.GATEWAY_READY, (e) => {
 	ApiClient.User.setGame('together with Asuna');
 	ApiClient.Guilds.map((guild) => {
 		console.log('Currently connected to ' + guild.name);
+    console.log('List of voice channels and connected members:');
+    ApiClient.Channels.voiceForGuild(guild).map((voiceChannel) => {
+      console.log('- ' + voiceChannel.name);
+      voiceChannel.members.map((member) => {
+        console.log('  - ' + member.name);
+      })
+    });
 	});
 
 });
