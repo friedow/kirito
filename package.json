@@ -1,0 +1,30 @@
+{
+  "name": "kirito",
+  "version": "0.0.1",
+  "description": "A Discord voice encourage bot.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/friedow/kirito.git"
+  },
+  "keywords": [
+    "Bot",
+    "Discord",
+    "Voice",
+    "Encouragement",
+    "Leveling",
+    "System"
+  ],
+  "author": "Christian Friedow",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/friedow/kirito/issues"
+  },
+  "homepage": "https://github.com/friedow/kirito#readme",
+  "dependencies": {
+    "discordie": "^0.11.0"
+  }
+}
