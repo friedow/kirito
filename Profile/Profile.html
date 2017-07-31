@@ -7,76 +7,84 @@
           margin: 0;
           padding: 0;
         }
+        h1 {
+          color: white;
+        }
+        h2 {
+          color: white;
+        }
+        h3 {
+          font-size: 20px;
+          color: white;
+        }
+        p {
+          color: white;
+        }
         .profile {
           width: 500px;
-          height: 500px;
-          display: flex;
-          flex-direction: column;
           background-image: url('./background.jpg');
           background-repeat: no-repeat;
           background-size: cover;
+        }
+        .username, .level, .emblem-wrapper {
+          text-align: center;
+        }
+
+        .emblem-wrapper {
+          position: relative;
+          z-index: 1;
+          padding: 100px 0px 0px 0px;
         }
         .emblem {
           height: 130px;
           border-radius: 50%;
         }
-        .emblem-wrapper {
-          z-index: 1;
-          margin: 100px 0px 0px 0px;
-        }
-        .username, .level, .emblem-wrapper {
-          text-align: center;
-        }
+
         .username {
+          padding: 85px 0px 40px 0px;
           background-color: #4C243B;
           position: relative;
           margin-top: -65px;
         }
-        .archievements {
-          height: 100%;
-          background-color: #4C243B;
-        }
+
         .level {
+          margin-top: -20px;
           position: relative;
           background-color: #FFA552;
         }
         .level-progress {
           background-color: #BA5624;
           left: 0px;
+          top: 0px;
           width: 33%;
-          height: 38px;
+          height: 100%;
           position: absolute;
         }
         .level-title {
           z-index: 1;
           position: relative;
           color: white;
-        }
-        h1 {
-          margin: 85px 0px 40px 0px;
-          color: white;
-        }
-        h2 {
-          margin: 5px 0px;
-          color: white;
+          padding: 5px 0px;
         }
 
-        h3 {
-          font-size: 22px;
-          color: white;
-        }
-        p {
-          color: white;
+        .archievements {
+          margin-top: -20px;
+          padding: 20px 40px;
+          background-color: #4C243B;
         }
         .archievement {
-          display: flex;
-          align-items: center;
-          margin: 40px
+          padding: 20px;
+          height: 50px;
         }
         .archievement-icon {
-          height: 40px;
+          height: 100%;
+          display: inline-block;
           border-radius: 50%;
-          margin-right: 20px;
+          margin-bottom: -10px;
+        }
+        .archievement-text {
+          display: inline-block;
+          padding-left: 20px;
         }
 
     </style>
