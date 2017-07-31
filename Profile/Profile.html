@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <style type="text/css">
+        body, h3, p, .username, .level {
+          margin: 0;
+          padding: 0;
+        }
+        .profile {
+          width: 500px;
+          height: 500px;
+          display: flex;
+          flex-direction: column;
+          background-image: url('./background.jpg');
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
+        .emblem {
+          height: 130px;
+          border-radius: 50%;
+        }
+        .emblem-wrapper {
+          z-index: 1;
+          margin: 100px 0px 0px 0px;
+        }
+        .username, .level, .emblem-wrapper {
+          text-align: center;
+        }
+        .username {
+          background-color: #4C243B;
+          position: relative;
+          margin-top: -65px;
+        }
+        .archievements {
+          height: 100%;
+          background-color: #4C243B;
+        }
+        .level {
+          position: relative;
+          background-color: #FFA552;
+        }
+        .level-progress {
+          background-color: #BA5624;
+          left: 0px;
+          width: 33%;
+          height: 38px;
+          position: absolute;
+        }
+        .level-title {
+          z-index: 1;
+          position: relative;
+          color: white;
+        }
+        h1 {
+          margin: 85px 0px 40px 0px;
+          color: white;
+        }
+        h2 {
+          margin: 5px 0px;
+          color: white;
+        }
+
+        h3 {
+          font-size: 22px;
+          color: white;
+        }
+        p {
+          color: white;
+        }
+        .archievement {
+          display: flex;
+          align-items: center;
+          margin: 40px
+        }
+        .archievement-icon {
+          height: 40px;
+          border-radius: 50%;
+          margin-right: 20px;
+        }
+
+    </style>
+    <div class="profile">
+      <div class="emblem-wrapper">
+        <img class="emblem" src="robot.png"></img>
+      </div>
+
+      <div class="username">
+        <h1>Notoxus</h1>
+      </div>
+      <div class="level">
+        <span class="level-progress"></span>
+        <h2 class="level-title">Level 22</h2>
+      </div>
+      <div class="archievements">
+        <div class="archievement">
+          <img src="robot.png" class="archievement-icon"></img>
+          <div class="archievement-text">
+            <h3 class="archievement-title">Archievement Title Test</h2>
+            <p class="archievement-description">Archievement Description Test</p>
+          </div>
+        </div>
+        <div class="archievement">
+          <img src="robot.png" class="archievement-icon"></img>
+          <div class="archievement-text">
+            <h3 class="archievement-title">Archievement Title Test</h2>
+            <p class="archievement-description">Archievement Description Test</p>
+          </div>
+        </div>
+        <div class="archievement">
+          <img src="robot.png" class="archievement-icon"></img>
+          <div class="archievement-text">
+            <h3 class="archievement-title">Archievement Title Test</h2>
+            <p class="archievement-description">Archievement Description Test</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
