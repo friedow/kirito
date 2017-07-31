@@ -32,13 +32,7 @@ class Kirito {
       console.log('Currently connected users:')
       this.getCurrentlyConnectedUsers().map( (user) => {
         console.log('- ' + user.name);
-        // TODO:
-        // DATABASE request user;
-        // IF user:
-          // user.level += 5000;
-        // ELSE:
-          // user.level = 5000;
-        // DATABASE write user;
+        // TODO: Add online time to user profile
       });
       console.log('')
     }, 5000);
@@ -67,6 +61,7 @@ class Kirito {
   }
 
   getProfile(user) {
+    // TODO: LOAD Information from database
     const stream = Screenshot('Profile/Profile.html', '500x1000', {crop: true, selector: '.profile'});
     stream.pipe(fs.createWriteStream('profile.png'));
     // TODO: Send as Discord message
