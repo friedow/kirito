@@ -1,4 +1,6 @@
+const fs = require('fs');
 const Discord = require('discordie');
+const Screenshot = require('screenshot-stream');
 
 class Kirito {
 
@@ -30,6 +32,7 @@ class Kirito {
       console.log('Currently connected users:')
       this.getCurrentlyConnectedUsers().map( (user) => {
         console.log('- ' + user.name);
+        // TODO:
         // DATABASE request user;
         // IF user:
           // user.level += 5000;
@@ -64,8 +67,10 @@ class Kirito {
   }
 
   getProfile(user) {
-
-    return 'test';
+    const stream = Screenshot('Profile/Profile.html', '500x1000', {crop: true, selector: '.profile'});
+    stream.pipe(fs.createWriteStream('profile.png'));
+    // TODO: Send as Discord message
+    return 'Successfully created profile!';
   }
 
   countServers() {
