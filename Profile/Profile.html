@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
-  <head></head>
+  <head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  </head>
   <body>
     <style type="text/css">
         body, h3, p, .username, .level {
@@ -66,7 +68,7 @@
           background-color: #BA5624;
           left: 0px;
           top: 0px;
-          width: 33%;
+          width: {{levelProgress}};
           height: 100%;
           position: absolute;
         }
@@ -77,23 +79,23 @@
           padding: 10px 0px;
         }
 
-        .archievements {
+        .achievements {
           opacity: 0.9;
           margin-top: -20px;
           padding: 20px 40px;
           background-color: #4C243B;
         }
-        .archievement {
+        .achievement {
           padding: 20px;
           height: 50px;
         }
-        .archievement-icon {
+        .achievement-icon {
           height: 100%;
           display: inline-block;
           border-radius: 50%;
           margin-bottom: -8px;
         }
-        .archievement-text {
+        .achievement-text {
           display: inline-block;
           padding-left: 20px;
         }
@@ -111,28 +113,16 @@
         <span class="level-progress"></span>
         <h2 class="level-title">Level {{level}}</h2>
       </div>
-      <div class="archievements">
-        <div class="archievement">
-          <img src="Profile/robot.png" class="archievement-icon"></img>
-          <div class="archievement-text">
-            <h3 class="archievement-title">Kirito Bot Designer</h2>
-            <p class="archievement-description">Cheating all the time</p>
+      <div class="achievements">
+        {{#each achievements}}
+          <div class="achievement">
+            <img src="superheroes-villains/PNG/PNG_Color/heroes-and-villains-{{this.icon}}.png" class="achievement-icon"></img>
+            <div class="achievement-text">
+              <h3 class="achievement-title">{{this.title}}</h2>
+              <p class="achievement-description">{{this.description}}</p>
+            </div>
           </div>
-        </div>
-        <div class="archievement">
-          <img src="Profile/robot.png" class="archievement-icon"></img>
-          <div class="archievement-text">
-            <h3 class="archievement-title">Level? Over 9000!</h2>
-            <p class="archievement-description">You asked for it XP</p>
-          </div>
-        </div>
-        <div class="archievement">
-          <img src="Profile/robot.png" class="archievement-icon"></img>
-          <div class="archievement-text">
-            <h3 class="archievement-title">Ridiculouosly Overpowered</h2>
-            <p class="archievement-description">Title sais everything</p>
-          </div>
-        </div>
+        {{/each}}
       </div>
     </div>
   </body>
