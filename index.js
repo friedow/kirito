@@ -56,7 +56,7 @@ class Kirito {
     }
     else if (e.message.content == 'profile') {
       const profile = this.getProfile(e.message.user);
-      e.message.channel.sendMessage(profile);
+      e.message.channel.uploadFile(profile, 'profile.png');
     }
   }
 
@@ -65,7 +65,7 @@ class Kirito {
     const stream = Screenshot('Profile/Profile.html', '500x1000', {crop: true, selector: '.profile'});
     stream.pipe(fs.createWriteStream('profile.png'));
     // TODO: Send as Discord message
-    return 'Successfully created profile!';
+    return stream;
   }
 
   countServers() {
