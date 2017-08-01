@@ -1,5 +1,7 @@
 const fs = require('fs');
 const Discord = require('discordie');
+const handlebars = require('handlebars');
+var webshot = require('webshot');
 const Screenshot = require('screenshot-stream');
 
 class Kirito {
@@ -61,10 +63,8 @@ class Kirito {
   }
 
   getProfile(user) {
-    // TODO: LOAD Information from database
+    // TODO: LOAD Level Information from database
     const stream = Screenshot('Profile/Profile.html', '500x1000', {crop: true, selector: '.profile'});
-    stream.pipe(fs.createWriteStream('profile.png'));
-    // TODO: Send as Discord message
     return stream;
   }
 
