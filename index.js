@@ -20,7 +20,6 @@ class Kirito {
     this.handleUserDisconnectedFromVoice = this.handleUserDisconnectedFromVoice.bind(this);
     this.handleChatCommand = this.handleChatCommand.bind(this);
     this.subscribeToEvents();
-
   }
 
   subscribeToEvents() {
@@ -64,6 +63,7 @@ class Kirito {
     const databaseUser = JSON.parse(JSON.stringify(user));
     databaseUser.experience = experience;
     this.db.users.update({id: databaseUser.id}, { $setOnInsert: databaseUser, $inc: { experience: experience } }, {upsert: true}, (err, res) => {
+      if (err) throw err;
       console.log("Added " + experience + " experience to user " + res.username + ".");
       console.log(res.username + " has now a total experience of " + res.experience + ".");
     });
