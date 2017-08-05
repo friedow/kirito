@@ -80,66 +80,50 @@ class Kirito {
     }
   }
 
-  getProfile(author, cb) {
-    MongoClient.connect(databaseUrl, (err, db) => {
-      if (err) throw err;
-      db.collection("users").findOne({id: author.id}, (err, result) => {
-        if (err) throw err;
-        let user = {};
-        if (!result) {
-          user = JSON.parse(JSON.stringify(author));
-          user.experience = 0;
-          db.collection("users").insertOne(user, (err, res) => {
-            if (err) throw err;
-            console.log("Added user to databse!");
-          });
-        }
-        else {
-          user = result;
-          console.log("Found user: " + result.username);
-        }
-        db.close();
-        const source = fs.readFileSync('Profile/Profile.html').toString();
-        // Calculate current level
-        const currentLevel = Math.round(Math.sqrt(user.experience / 3 + 36) - 5);
-        // Calculate level progress
-        const nextLevel = currentLevel + 1;
-        const totalExperienceForCurrentLevel = 3 * currentLevel * (currentLevel + 10) - 33;
-        const totalExperienceForNextLevel = 3 * nextLevel * (nextLevel + 10) - 33;
-        const experienceForCurrentLevel = totalExperienceForNextLevel - totalExperienceForCurrentLevel;
-        const experienceOfCurrentLevel = user.experience - totalExperienceForCurrentLevel;
-        const currentLevelProgress = experienceOfCurrentLevel * 100 / experienceForCurrentLevel;
+  getProfile(user, callback) {
+    const databaseUser = JSON.parse(JSON.stringify(user));
+    databaseUser.experience = 0;
+    this.db.users.findAndModify({query: {id: user.id}, update: { $setOnInsert: databaseUser }, upsert: true, new: true}, (err, result) => {
+      const source = fs.readFileSync('Profile/Profile.html').toString();
+      // Calculate current level
+      const currentLevel = Math.round(Math.sqrt(databaseUser.experience / 3 + 36) - 5);
+      // Calculate level progress
+      const nextLevel = currentLevel + 1;
+      const totalExperienceForCurrentLevel = 3 * currentLevel * (currentLevel + 10) - 33;
+      const totalExperienceForNextLevel = 3 * nextLevel * (nextLevel + 10) - 33;
+      const experienceForCurrentLevel = totalExperienceForNextLevel - totalExperienceForCurrentLevel;
+      const experienceOfCurrentLevel = databaseUser.experience - totalExperienceForCurrentLevel;
+      const currentLevelProgress = experienceOfCurrentLevel * 100 / experienceForCurrentLevel;
 
-        const context = {
-          username: user.username,
-          level: currentLevel,
-          levelProgress: currentLevelProgress,
-          avatar: author.staticAvatarURL,
-          achievements: [
-            {
-              icon: "11",
-              title: "The One Award",
-              description: "Highest rank ever reachable"
-            },
-            {
-              icon: "14",
-              title: "Skill Level? Over 9000!",
-              description: "You asked for it XP"
-            },
-            {
-              icon: "27",
-              title: "Ridiculouosly Overpowered",
-              description: "Title sais everything"
-            }
-          ]
-        };
-        const template = handlebars.compile(source);
-        const html = template(context);
-        const filename = 'profiles/' + user.username + '.html';
-        fs.writeFileSync(filename, html);
-        const stream = Screenshot(filename, '500x1000', {crop: true, selector: '.profile'});
-        cb(stream);
-      });
+      const context = {
+        username: databaseUser.username,
+        level: currentLevel,
+        levelProgress: currentLevelProgress,
+        avatar: user.staticAvatarURL,
+        achievements: [
+          {
+            icon: "11",
+            title: "The One Award",
+            description: "Highest rank ever reachable"
+          },
+          {
+            icon: "14",
+            title: "Skill Level? Over 9000!",
+            description: "You asked for it XP"
+          },
+          {
+            icon: "27",
+            title: "Ridiculouosly Overpowered",
+            description: "Title sais everything"
+          }
+        ]
+      };
+      const template = handlebars.compile(source);
+      const html = template(context);
+      const filename = 'profiles/' + databaseUser.username + '.html';
+      fs.writeFileSync(filename, html);
+      const stream = Screenshot(filename, '500x1000', {crop: true, selector: '.profile'});
+      callback(stream);
     });
   }
 
