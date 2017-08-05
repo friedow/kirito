@@ -177,8 +177,9 @@ class Kirito {
         };
         const template = handlebars.compile(source);
         const html = template(context);
-        fs.writeFileSync('profiles/Notoxus.html', html);
-        const stream = Screenshot('profiles/Notoxus.html', '500x1000', {crop: true, selector: '.profile'});
+        const filename = 'profiles/' + user.username + '.html';
+        fs.writeFileSync(filename, html);
+        const stream = Screenshot(filename, '500x1000', {crop: true, selector: '.profile'});
         cb(stream);
       });
     });
