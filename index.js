@@ -63,34 +63,10 @@ class Kirito {
   addExperience(user, experience) {
     const databaseUser = JSON.parse(JSON.stringify(user));
     databaseUser.experience = experience;
-    this.db.users.update({id: databaseUser.id}, { $setOnInsert: databaseUser, $inc: { experience: experience } }, {upsert: true}, function(err, res) {
-      if (err) throw err;
+    this.db.users.update({id: databaseUser.id}, { $setOnInsert: databaseUser, $inc: { experience: experience } }, {upsert: true}, (err, res) => {
       console.log("Added " + experience + " experience to user " + res.username + ".");
       console.log(res.username + " has now a total experience of " + res.experience + ".");
     });
-  }
-
-  watchUsers() {
-    setInterval( () => {
-      console.log('Currently connected users:')
-      this.getCurrentlyConnectedUsers().map( (user) => {
-        console.log('- ' + user.name);
-        // TODO: Add online time to user profile
-      });
-      console.log('')
-    }, 5000);
-  }
-
-  getCurrentlyConnectedUsers() {
-    let Users = [];
-    this.ApiClient.Guilds.map( (guild) => {
-      this.ApiClient.Channels.voiceForGuild(guild).map( (voiceChannel) => {
-        voiceChannel.members.map( (member) => {
-          Users.push(member);
-        });
-      });
-    });
-    return Users;
   }
 
   handleChatCommand(e) {
