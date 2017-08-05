@@ -2,8 +2,8 @@ const fs = require('fs');
 const Discord = require('discordie');
 const handlebars = require('handlebars');
 const Screenshot = require('screenshot-stream');
-const MongoClient = require('mongodb').MongoClient;
-const databaseUrl = "mongodb://localhost:27017/test";
+const mongojs = require('mongojs');
+
 
 class Kirito {
 
@@ -13,6 +13,7 @@ class Kirito {
     this.ApiClient.connect({
     	token: "MzQwNDE5MjU4MDQ1NTYyODgy.DFyPtw.T-i9DfVm2-bbcZ3Nc6E1kJ-DLqY"
     });
+    this.db = mongojs('test', ['users']);
     this.connectedUsers = [];
     this.setGame = this.setGame.bind(this);
     this.handleUserConnectedToVoice = this.handleUserConnectedToVoice.bind(this);
@@ -59,32 +60,13 @@ class Kirito {
     }
   }
 
-  addExperience(currentUser, experience) {
-    MongoClient.connect(databaseUrl, (err, db) => {
+  addExperience(user, experience) {
+    const databaseUser = JSON.parse(JSON.stringify(user));
+    databaseUser.experience = experience;
+    this.db.users.update({id: databaseUser.id}, { $setOnInsert: databaseUser, $inc: { experience: experience } }, {upsert: true}, function(err, res) {
       if (err) throw err;
-      db.collection("users").findOne({id: currentUser.id}, (err, result) => {
-        if (err) throw err;
-        let user = {};
-        if (!result) {
-          user = JSON.parse(JSON.stringify(currentUser));
-          user.experience = 0;
-          db.collection("users").insertOne(user, (err, res) => {
-            if (err) throw err;
-            console.log("Added user " + user.username + " to databse.");
-          });
-        }
-        else {
-          user = result;
-          console.log("Found user: " + user.username + " in database.");
-        }
-        user.experience += experience;
-        db.collection("users").updateOne({id: user.id}, user, function(err, res) {
-          if (err) throw err;
-          console.log("Added " + experience + " experience to user " + user.username + ".");
-          console.log(user.username + " has now a total experience of " + user.experience + ".");
-        });
-        db.close();
-      });
+      console.log("Added " + experience + " experience to user " + res.username + ".");
+      console.log(res.username + " has now a total experience of " + res.experience + ".");
     });
   }
 
