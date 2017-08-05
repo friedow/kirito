@@ -80,14 +80,8 @@ class Kirito {
           user = result;
           console.log("Found user: " + result.username);
         }
-      ]
-    };
-    const template = handlebars.compile(source);
-    const html = template(context);
-    fs.writeFileSync('profiles/Notoxus.html', html);
-    const stream = Screenshot('profiles/Notoxus.html', '500x1000', {crop: true, selector: '.profile'});
-    return stream;
         db.close();
+        const source = fs.readFileSync('Profile/Profile.html').toString();
         // Calculate current level
         const currentLevel = Math.round(Math.sqrt(user.experience / 3 + 36) - 5);
         // Calculate level progress
