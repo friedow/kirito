@@ -114,12 +114,12 @@
         <h2 class="level-title">Level {{level}}</h2>
       </div>
       <div class="achievements">
-        {{#each achievements}}
+        {{#each servers}}
           <div class="achievement">
-            <img src="superheroes-villains/PNG/PNG_Color/heroes-and-villains-{{this.icon}}.png" class="achievement-icon"></img>
+            <img src="{{this.icon}}" class="achievement-icon"></img>
             <div class="achievement-text">
-              <h3 class="achievement-title">{{this.title}}</h2>
-              <p class="achievement-description">{{this.description}}</p>
+              <h3 class="achievement-title">{{this.name}}</h2>
+              <p class="achievement-description">{{this.experience}} Experience</p>
             </div>
           </div>
         {{/each}}

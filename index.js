@@ -13,7 +13,7 @@ class Kirito {
     this.ApiClient.connect({
     	token: "MzQwNDE5MjU4MDQ1NTYyODgy.DFyPtw.T-i9DfVm2-bbcZ3Nc6E1kJ-DLqY"
     });
-    this.db = mongojs('test', ['users']);
+    this.db = mongojs('a', ['users']);
     this.connectedUsers = [];
     this.setGame = this.setGame.bind(this);
     this.handleUserConnectedToVoice = this.handleUserConnectedToVoice.bind(this);
@@ -43,7 +43,7 @@ class Kirito {
   handleUserDisconnectedFromVoice(e) {
     const onlineTime = this.calculateVoiceTime(e.user);
     delete this.connectedUsers[e.user.id];
-    this.addExperience(e.user, onlineTime);
+    this.addExperience(e.user, e.channel.guild, onlineTime);
     console.log("User " + e.user.username + " disconnected from voice channel " + e.channel.name + " on server " + e.channel.guild.name + ".");
   }
 
@@ -59,13 +59,14 @@ class Kirito {
     }
   }
 
-  addExperience(user, experience) {
+  addExperience(user, server, experience) {
     const databaseUser = JSON.parse(JSON.stringify(user));
-    databaseUser.experience = experience;
-    this.db.users.update({id: databaseUser.id}, { $setOnInsert: databaseUser, $inc: { experience: experience } }, {upsert: true}, (err, res) => {
+    this.db.users.update({id: databaseUser.id, "servers.id": server.id}, {$inc: {"servers.$.experience": experience}} );
+    this.db.users.update({id: databaseUser.id, "servers.id": {$ne: server.id}}, { $setOnInsert: databaseUser, $inc: { experience: experience }, $push: {"servers": {id: server.id, "experience": experience}} }, {upsert: true}, (err, res) => {
       if (err) throw err;
-      console.log("Added " + experience + " experience to user " + res.username + ".");
-      console.log(res.username + " has now a total experience of " + res.experience + ".");
+      console.log("Added " + experience + " experience to user " + user.username + ".");
+      console.log(user.username + " has now a total experience of " + res.experience + ".");
+
     });
   }
 
@@ -80,13 +81,26 @@ class Kirito {
     }
   }
 
+  getAdditionalServerData(servers) {
+    let serverList = [];
+    servers.map((currentServer) => {
+      let server = this.ApiClient.Guilds.get(currentServer.id);
+      const databaseServer = JSON.parse(JSON.stringify(server));
+      databaseServer.experience = currentServer.experience;
+      serverList.push(databaseServer);
+    });
+    serverList.sort((a, b) => {b.experience - a.experience});
+    return serverList;
+  }
+
   getProfile(user, callback) {
+    console.log("Printing profile for user " + user.username + ".");
     const databaseUser = JSON.parse(JSON.stringify(user));
     databaseUser.experience = 0;
     this.db.users.findAndModify({query: {id: user.id}, update: { $setOnInsert: databaseUser }, upsert: true, new: true}, (err, result) => {
       const source = fs.readFileSync('Profile/Profile.html').toString();
       // Calculate current level
-      const currentLevel = Math.round(Math.sqrt(databaseUser.experience / 3 + 36) - 5);
+      const currentLevel = Math.round(Math.sqrt(result.experience / 3 + 36) - 5);
       // Calculate level progress
       const nextLevel = currentLevel + 1;
       const totalExperienceForCurrentLevel = 3 * currentLevel * (currentLevel + 10) - 33;
@@ -95,28 +109,14 @@ class Kirito {
       const experienceOfCurrentLevel = databaseUser.experience - totalExperienceForCurrentLevel;
       const currentLevelProgress = experienceOfCurrentLevel * 100 / experienceForCurrentLevel;
 
+      const servers = this.getAdditionalServerData(result.servers);
+
       const context = {
         username: databaseUser.username,
         level: currentLevel,
         levelProgress: currentLevelProgress,
         avatar: user.staticAvatarURL,
-        achievements: [
-          {
-            icon: "11",
-            title: "The One Award",
-            description: "Highest rank ever reachable"
-          },
-          {
-            icon: "14",
-            title: "Skill Level? Over 9000!",
-            description: "You asked for it XP"
-          },
-          {
-            icon: "27",
-            title: "Ridiculouosly Overpowered",
-            description: "Title sais everything"
-          }
-        ]
+        servers: servers
       };
       const template = handlebars.compile(source);
       const html = template(context);
