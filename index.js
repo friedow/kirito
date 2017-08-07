@@ -11,7 +11,7 @@ class Kirito {
     this.Events = Discord.Events;
     this.ApiClient = new Discord();
     this.ApiClient.connect({
-    	token: "MzQwNDE5MjU4MDQ1NTYyODgy.DFyPtw.T-i9DfVm2-bbcZ3Nc6E1kJ-DLqY"
+    	token: process.env.AUTH_TOKEN
     });
     this.db = mongojs('a', ['users']);
     this.connectedUsers = [];
