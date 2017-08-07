@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  </head>
+  <body>
+    <style type="text/css">
+        body, h3, p, .username, .level {
+          margin: 0;
+          padding: 0;
+        }
+        h1, h2, h3, p {
+          color: white;
+          font-family: roboto;
+        }
+        h1 {
+          letter-spacing: 3px;
+        }
+        h2 {
+          font-weight: 500;
+          letter-spacing: 1px;
+        }
+        h3 {
+          letter-spacing: 1px;
+          font-weight: 500;
+          font-size: 20px;
+        }
+        p {
+          letter-spacing: 0.5px;
+          font-weight: 400;
+
+        }
+        .profile {
+          width: 500px;
+          background-image: url('./background.jpg');
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
+        .username, .level, .emblem-wrapper {
+          text-align: center;
+        }
+
+        .emblem-wrapper {
+          position: relative;
+          z-index: 1;
+          padding: 100px 0px 0px 0px;
+        }
+        .emblem {
+          height: 130px;
+          border-radius: 50%;
+        }
+
+        .username {
+          padding: 75px 0px 10px 0px;
+          background-color: #4C243B;
+          opacity: 0.9;
+          position: relative;
+          margin-top: -65px;
+        }
+
+        .level {
+          opacity: 0.9;
+          margin-top: -20px;
+          position: relative;
+          background-color: #FFA552;
+        }
+        .level-progress {
+          background-color: #BA5624;
+          left: 0px;
+          top: 0px;
+          width: {{levelProgress}}%;
+          height: 100%;
+          position: absolute;
+        }
+        .level-title {
+          z-index: 1;
+          position: relative;
+          color: white;
+          padding: 10px 0px;
+        }
+
+        .achievements {
+          opacity: 0.9;
+          margin-top: -20px;
+          padding: 20px 40px;
+          background-color: #4C243B;
+        }
+        .achievement {
+          padding: 20px;
+          height: 50px;
+        }
+        .achievement-icon {
+          height: 100%;
+          display: inline-block;
+          border-radius: 50%;
+          margin-bottom: -8px;
+        }
+        .achievement-text {
+          display: inline-block;
+          padding-left: 20px;
+        }
+
+    </style>
+    <div class="profile">
+      <div class="emblem-wrapper">
+        <img class="emblem" src="{{avatar}}"></img>
+      </div>
+
+      <div class="username">
+        <h1>{{username}}</h1>
+      </div>
+      <div class="level">
+        <span class="level-progress"></span>
+        <h2 class="level-title">Level {{level}}</h2>
+      </div>
+      <div class="achievements">
+        {{#each servers}}
+          <div class="achievement">
+            <img src="{{this.icon}}" class="achievement-icon"></img>
+            <div class="achievement-text">
+              <h3 class="achievement-title">{{this.name}}</h2>
+              <p class="achievement-description">{{this.experience}} Experience</p>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  </body>
+</html>
