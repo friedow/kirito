@@ -13,7 +13,7 @@ class Kirito {
     this.ApiClient.connect({
     	token: process.env.AUTH_TOKEN
     });
-    this.db = mongojs('a', ['users']);
+    this.db = mongojs('mongo/kirito', ['users']);
     this.connectedUsers = [];
     this.setGame = this.setGame.bind(this);
     this.handleUserConnectedToVoice = this.handleUserConnectedToVoice.bind(this);
