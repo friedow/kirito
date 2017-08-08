@@ -8,7 +8,6 @@ const mongojs = require('mongojs');
 class Kirito {
 
   constructor() {
-    this.Events = Discord.Events;
     this.ApiClient = new Discord();
     this.ApiClient.connect({
     	token: process.env.AUTH_TOKEN
@@ -23,10 +22,10 @@ class Kirito {
   }
 
   subscribeToEvents() {
-    this.ApiClient.Dispatcher.on(this.Events.GATEWAY_READY, this.setGame);
-    this.ApiClient.Dispatcher.on(this.Events.VOICE_CHANNEL_JOIN, this.handleUserConnectedToVoice);
-    this.ApiClient.Dispatcher.on(this.Events.VOICE_CHANNEL_LEAVE, this.handleUserDisconnectedFromVoice);
-    this.ApiClient.Dispatcher.on(this.Events.MESSAGE_CREATE, this.handleChatCommand);
+    this.ApiClient.Dispatcher.on(Discord.Events.GATEWAY_READY, this.setGame);
+    this.ApiClient.Dispatcher.on(Discord.Events.VOICE_CHANNEL_JOIN, this.handleUserConnectedToVoice);
+    this.ApiClient.Dispatcher.on(Discord.Events.VOICE_CHANNEL_LEAVE, this.handleUserDisconnectedFromVoice);
+    this.ApiClient.Dispatcher.on(Discord.Events.MESSAGE_CREATE, this.handleChatCommand);
   }
 
   setGame(e) {
