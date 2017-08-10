@@ -32,7 +32,7 @@ class Kirito {
     this.discordApi.Dispatcher.on(discord.Events.MESSAGE_CREATE, this.handleChatCommand);
   }
 
-  setGame(e) {
+  setGame() {
     this.discordApi.User.setGame('together with Asuna');
   }
 
@@ -90,7 +90,7 @@ class Kirito {
     this.db.users.findAndModify({query: {id: user.id}, update: { $setOnInsert: newUser }, upsert: true, new: true}, (err, result) => {
       const profileInformation = {
         username: user.username,
-        level: this.calculateLevel(result.experience);,
+        level: this.calculateLevel(result.experience),
         levelProgress: this.calculateLevelProgress(result.experience),
         avatar: user.staticAvatarURL,
         servers: this.getAdditionalServerData(result.servers)
@@ -103,7 +103,7 @@ class Kirito {
   }
 
   calculateLevel(experience) {
-    return Math.round(Math.sqrt(result.experience / 3 + 36) - 5);
+    return Math.round(Math.sqrt(experience / 3 + 36) - 5);
   }
 
   calculateLevelProgress(experience) {
@@ -121,6 +121,7 @@ class Kirito {
 
   getAdditionalServerData(servers) {
     let serverList = [];
+    if (!servers) return [];
     servers.map((currentServer) => {
       const server = this.discordApi.Guilds.get(currentServer.id);
       const databaseServer = JSON.parse(JSON.stringify(server));
