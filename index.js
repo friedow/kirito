@@ -25,12 +25,14 @@ class Kirito {
   subscribeToEvents() {
     // Bind this into callback functions
     this.setGame = this.setGame.bind(this);
+    this.joinServer = this.joinServer.bind(this);
     this.addConnectedUser = this.addConnectedUser.bind(this);
     this.removeConnectedUser = this.removeConnectedUser.bind(this);
     this.handleChatCommand = this.handleChatCommand.bind(this);
 
     // Subscribe to events
     this.discordApi.Dispatcher.on(discord.Events.GATEWAY_READY, this.setGame);
+    this.discordApi.Dispatcher.on(discord.Events.GUILD_CREATE, this.joinServer);
     this.discordApi.Dispatcher.on(discord.Events.VOICE_CHANNEL_JOIN, this.addConnectedUser);
     this.discordApi.Dispatcher.on(discord.Events.VOICE_CHANNEL_LEAVE, this.removeConnectedUser);
     this.discordApi.Dispatcher.on(discord.Events.MESSAGE_CREATE, this.handleChatCommand);
@@ -41,6 +43,15 @@ class Kirito {
    */
   setGame() {
     this.discordApi.User.setGame('together with Asuna');
+  }
+
+  /**
+   * Prints an introduction message.
+   * @param {Event} e - Discord API event.
+   */
+  joinServer(e) {
+    e.guild.generalChannel.sendTyping();
+    e.guild.generalChannel.sendMessage();
   }
 
   /**
@@ -101,6 +112,7 @@ class Kirito {
    * @param {Event} e - Discord API event.
    */
   handleChatCommand(e) {
+    e.message.channel.sendTyping();
     switch (e.message.content) {
       case 'ping':
         e.message.channel.sendMessage('pong');
