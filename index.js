@@ -11,7 +11,7 @@ class Kirito {
     this.discordApi.connect({ token: process.env.AUTH_TOKEN });
 
     // Prepare database
-    this.db = mongojs('kirito', ['users']);
+    this.db = mongojs(process.env.DATABASE, ['users']);
 
     // Prepare application state
     this.connectedUsers = [];
@@ -188,7 +188,7 @@ class Kirito {
   getAdditionalServerData(servers) {
     let serverList = [];
     if (!servers) return [];
-    
+
     servers.map((currentServer) => {
       const server = this.discordApi.Guilds.get(currentServer.id);
       const databaseServer = JSON.parse(JSON.stringify(server));
