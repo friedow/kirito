@@ -111,8 +111,9 @@ class Kirito {
    * @param {Number} experience - Amount of experience to add.
    */
   addExperience(user, server, experience) {
+    this.db.users.update({id: user.id}, { $setOnInsert: user, $inc: { experience: experience } }, {upsert: true});
     this.db.users.update({id: user.id, 'servers.id': server.id}, {$inc: {'servers.$.experience': experience}} );
-    this.db.users.update({id: user.id, 'servers.id': {$ne: server.id}}, { $setOnInsert: user, $inc: { experience: experience }, $push: {'servers': {id: server.id, 'experience': experience}} }, {upsert: true, new: true}, (err, res) => {
+    this.db.users.update({id: user.id, 'servers.id': {$ne: server.id}}, { $push: {'servers': {id: server.id, 'experience': experience}} }, (err, res) => {
       console.log('Added ' + experience + ' experience to user ' + user.username + '.');
       console.log(user.username + ' has now a total experience of ' + res.experience + '.');
     });
@@ -155,6 +156,11 @@ class Kirito {
         avatar: user.staticAvatarURL,
         servers: this.getAdditionalServerData(result.servers)
       };
+      console.log('username:' + user.username);
+      console.log('level:' + this.calculateLevel(result.experience));
+      console.log('experience:' + result.experience);
+      console.log('levelProgress:' + this.calculateLevelProgress(result.experience));
+      console.log('servers:' + this.getAdditionalServerData(result.servers));
       const profileHtmlFilename = 'profiles/' + user.username + '.html';
       this.createProfileHtml(profileHtmlFilename, profileInformation);
       const stream = this.createProfileImageStream(profileHtmlFilename);
