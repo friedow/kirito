@@ -226,12 +226,31 @@ class Kirito {
    * @return {String} Avatar URL.
    */
   getAvatarUrl(user) {
-    let avatarUrl = user.staticAvatarURL;
-    if (!avatarUrl) {
-      const defaultAvatarIndex = Number(user.discriminator) % 100;
+    let avatarUrl = '';
+    if (user.avatar) {
+      avatarUrl = 'https://cdn.discordapp.com/avatars/' + user.id + '/' + user.avatar + '.png';
+    } else {
+      const defaultAvatarIndex = Number(user.id) % 100;
       avatarUrl = './images/superheroes/heroes-and-villains-' + defaultAvatarIndex + '.png'
     }
     return avatarUrl;
+  }
+
+  /**
+   * If the server has an icon, the icon is returned, otherwise an URL to
+   * a default icon is returned.
+   * @param {Object} server - Discord API server object.
+   * @return {String} Icon URL.
+   */
+  getIconUrl(server) {
+    let iconUrl = '';
+    if (server.icon) {
+      iconUrl = 'https://cdn.discordapp.com/icons/' + server.id + '/' + server.icon + '.png';
+    } else {
+      const defaultIconIndex = Number(server.id) % 100;
+      iconUrl = './images/superheroes/heroes-and-villains-' + defaultIconIndex + '.png'
+    }
+    return iconUrl;
   }
 
   /**
@@ -256,6 +275,7 @@ class Kirito {
     servers.map((currentServer) => {
       const server = this.discordApi.Guilds.get(currentServer.id);
       const databaseServer = JSON.parse(JSON.stringify(server));
+      databaseServer.iconURL = this.getIconUrl(server);
       databaseServer.experience = currentServer.experience;
       serverList.push(databaseServer);
     });
