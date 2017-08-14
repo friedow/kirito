@@ -66,13 +66,14 @@ class Kirito {
   }
 
   /**
-   * Adds a user to the list of users
-   * in voice channels (connected users).
+   * Adds a user to the list of users in voice channels (connected users).
    * @param {Event} e - Discord API event.
    */
   addConnectedUser(e) {
-    const user = JSON.parse(JSON.stringify(e.user));
-    user.dateConnected = Date.now();
+    const rewardInterval = 60000;
+    const experiencePerMinute = 1;
+    const user = {};
+    user.experienceTimer = setInterval(() => { this.addExperience(e.user, e.channel.guild, experiencePerMinute) }, rewardInterval);
     this.connectedUsers[e.user.id] = user;
     console.log('User ' + e.user.username + ' connected to voice channel ' + e.channel.name + ' on server ' + e.channel.guild.name + '.');
   }
@@ -82,26 +83,13 @@ class Kirito {
    * @param {Event} e - Discord API event.
    */
   removeConnectedUser(e) {
-    const experience = this.calculateVoiceTime(e.user);
-    this.addExperience(e.user, e.channel.guild, experience);
-    delete this.connectedUsers[e.user.id];
-    console.log('User ' + e.user.username + ' disconnected from voice channel ' + e.channel.name + ' on server ' + e.channel.guild.name + '.');
-  }
-
-  /**
-   * Calculates the time a user spent in a voice channel.
-   * @param {Object} user - Discord API user object.
-   * @return {Number} Voice time in minutes.
-   */
-  calculateVoiceTime(user) {
-    const dateDisconnected = Date.now();
-    const connectedUser = this.connectedUsers[user.id];
-    if (connectedUser) {
-      return Math.round((dateDisconnected - connectedUser.dateConnected) / 60000);
-    } else {
-      console.log('User ' + user.username + ' not found in list of online users. 0 minutes online.');
-      return 0;
+    if (!this.connectedUsers[e.user.id]) {
+      console.log('User ' + e.user.username + ' not found in list of online users.');
+      return;
     }
+    clearInterval(this.connectedUsers[e.user.id].experienceTimer);
+    delete this.connectedUsers[e.user.id];
+    console.log('User ' + e.user.username + ' disconnected from server ' + e.channel.guild.name + '.');
   }
 
   /**
