@@ -4,6 +4,7 @@ const discord = require('discordie');
 const handlebars = require('handlebars');
 const Screenshot = require('screenshot-stream');
 
+/** A Discord bot, which encourages players to join voice channels. */
 class Kirito {
   constructor() {
     // Prepare discord api
@@ -24,25 +25,39 @@ class Kirito {
    */
   subscribeToEvents() {
     // Bind this into callback functions
-    this.setGame = this.setGame.bind(this);
+    this.prepareBot = this.prepareBot.bind(this);
     this.joinServer = this.joinServer.bind(this);
-    this.addConnectedUser = this.addConnectedUser.bind(this);
-    this.removeConnectedUser = this.removeConnectedUser.bind(this);
+    this.userConnected = this.userConnected.bind(this);
+    this.userDisconnected = this.userDisconnected.bind(this);
     this.handleChatCommand = this.handleChatCommand.bind(this);
 
     // Subscribe to events
-    this.discordApi.Dispatcher.on(discord.Events.GATEWAY_READY, this.setGame);
+    this.discordApi.Dispatcher.on(discord.Events.GATEWAY_READY, this.prepareBot);
     this.discordApi.Dispatcher.on(discord.Events.GUILD_CREATE, this.joinServer);
-    this.discordApi.Dispatcher.on(discord.Events.VOICE_CHANNEL_JOIN, this.addConnectedUser);
-    this.discordApi.Dispatcher.on(discord.Events.VOICE_CHANNEL_LEAVE, this.removeConnectedUser);
+    this.discordApi.Dispatcher.on(discord.Events.VOICE_CHANNEL_JOIN, this.userConnected);
+    this.discordApi.Dispatcher.on(discord.Events.VOICE_CHANNEL_LEAVE, this.userDisconnected);
     this.discordApi.Dispatcher.on(discord.Events.MESSAGE_CREATE, this.handleChatCommand);
   }
 
   /**
-   * Tells Discord which game is be displayed below the name.
+   * Initializes the bot using the Discord API.
    */
-  setGame() {
+  prepareBot() {
     this.discordApi.User.setGame('together with Asuna');
+    this.addCurrentlyConnectedUsers();
+  }
+
+  /**
+   * Adds all currently connected users to the list of connected users.
+   */
+  addCurrentlyConnectedUsers() {
+    this.discordApi.Guilds.forEach((server) => {
+      server.voiceChannels.forEach((channel) => {
+        channel.members.forEach((user) => {
+          this.addConnectedUser(user, server);
+        });
+      });
+    });
   }
 
   /**
@@ -66,30 +81,47 @@ class Kirito {
   }
 
   /**
-   * Adds a user to the list of users in voice channels (connected users).
+   * Handles users connecting to voice channels.
    * @param {Event} e - Discord API event.
    */
-  addConnectedUser(e) {
+  userConnected(e) {
+    this.addConnectedUser(e.user, e.channel.guild);
+  }
+
+  /**
+   * Adds a user to the list of users in voice channels (connected users).
+   * @param {Object} user - Discord API user object.
+   * @param {Object} server - Discord API guild object.
+   */
+  addConnectedUser(user, server) {
     const rewardInterval = 60000;
     const experiencePerMinute = 1;
-    const user = {};
-    user.experienceTimer = setInterval(() => { this.addExperience(e.user, e.channel.guild, experiencePerMinute) }, rewardInterval);
-    this.connectedUsers[e.user.id] = user;
-    console.log('User ' + e.user.username + ' connected to voice channel ' + e.channel.name + ' on server ' + e.channel.guild.name + '.');
+    const connectedUser = {};
+    connectedUser.experienceTimer = setInterval(() => { this.addExperience(user, server, experiencePerMinute) }, rewardInterval);
+    this.connectedUsers[user.id] = connectedUser;
+    console.log('User ' + user.username + ' connected to server ' + server.name + '.');
+  }
+
+  /**
+   * Handles users disconnecting from voice channels.
+   * @param {Event} e - Discord API event.
+   */
+  userDisconnected(e) {
+    this.removeConnectedUser(e.user);
   }
 
   /**
    * Removes a user from the list of users in voice channels (connected users).
-   * @param {Event} e - Discord API event.
+   * @param {Object} user - Discord API user object.
    */
-  removeConnectedUser(e) {
-    if (!this.connectedUsers[e.user.id]) {
-      console.log('User ' + e.user.username + ' not found in list of online users.');
+  removeConnectedUser(user) {
+    if (!this.connectedUsers[user.id]) {
+      console.log('User ' + user.username + ' not found in list of online users.');
       return;
     }
-    clearInterval(this.connectedUsers[e.user.id].experienceTimer);
-    delete this.connectedUsers[e.user.id];
-    console.log('User ' + e.user.username + ' disconnected from server ' + e.channel.guild.name + '.');
+    clearInterval(this.connectedUsers[user.id].experienceTimer);
+    delete this.connectedUsers[user.id];
+    console.log('User ' + user.username + ' disconnected.');
   }
 
   /**

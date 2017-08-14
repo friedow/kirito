@@ -1,5 +1,5 @@
 # Kirito
-A Discord bot, which encourages players to join the voice channels.
+A Discord bot, which encourages players to join voice channels.
 
 ## Installation
 
