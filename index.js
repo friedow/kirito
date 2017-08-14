@@ -25,12 +25,14 @@ class Kirito {
   subscribeToEvents() {
     // Bind this into callback functions
     this.setGame = this.setGame.bind(this);
+    this.joinServer = this.joinServer.bind(this);
     this.addConnectedUser = this.addConnectedUser.bind(this);
     this.removeConnectedUser = this.removeConnectedUser.bind(this);
     this.handleChatCommand = this.handleChatCommand.bind(this);
 
     // Subscribe to events
     this.discordApi.Dispatcher.on(discord.Events.GATEWAY_READY, this.setGame);
+    this.discordApi.Dispatcher.on(discord.Events.GUILD_CREATE, this.joinServer);
     this.discordApi.Dispatcher.on(discord.Events.VOICE_CHANNEL_JOIN, this.addConnectedUser);
     this.discordApi.Dispatcher.on(discord.Events.VOICE_CHANNEL_LEAVE, this.removeConnectedUser);
     this.discordApi.Dispatcher.on(discord.Events.MESSAGE_CREATE, this.handleChatCommand);
@@ -41,6 +43,26 @@ class Kirito {
    */
   setGame() {
     this.discordApi.User.setGame('together with Asuna');
+  }
+
+  /**
+   * Prints an introduction message.
+   * @param {Event} e - Discord API event.
+   */
+  joinServer(e) {
+    e.guild.generalChannel.sendTyping();
+    const introduction = [
+      'Hi!',
+      'I am Kirito, your personal voice chat coach. From now on, every time you join',
+      'a voice channel on this Server you will receive experience and therefore level.',
+      'Additionally, you can ask me things through so called commands. Currently,',
+      'I know two commands. Command number one is `ping`, which obviously starts a',
+      'table tennis match, and command number two is called `profile` where I will',
+      'print an image of your current player profile.',
+      '',
+      'Enjoy your time in voice channels :).'
+    ]
+    e.guild.generalChannel.sendMessage(introduction);
   }
 
   /**
@@ -101,6 +123,7 @@ class Kirito {
    * @param {Event} e - Discord API event.
    */
   handleChatCommand(e) {
+    e.message.channel.sendTyping();
     switch (e.message.content) {
       case 'ping':
         e.message.channel.sendMessage('pong');
