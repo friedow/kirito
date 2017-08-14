@@ -181,7 +181,7 @@ class Kirito {
    * @return {Number} Level corresponding to experience.
    */
   calculateLevel(experience) {
-    return Math.round(Math.sqrt(experience / 3 + 36) - 5);
+    return Math.floor(Math.sqrt(experience / 3 + 36) - 5);
   }
 
   /**
