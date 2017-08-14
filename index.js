@@ -153,7 +153,7 @@ class Kirito {
         username: user.username,
         level: this.calculateLevel(result.experience),
         levelProgress: this.calculateLevelProgress(result.experience),
-        avatar: getAvatarUrl(user),
+        avatar: this.getAvatarUrl(user),
         servers: this.getAdditionalServerData(result.servers)
       };
       console.log('username:' + user.username);
