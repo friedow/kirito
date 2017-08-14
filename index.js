@@ -153,7 +153,7 @@ class Kirito {
         username: user.username,
         level: this.calculateLevel(result.experience),
         levelProgress: this.calculateLevelProgress(result.experience),
-        avatar: user.staticAvatarURL,
+        avatar: getAvatarUrl(user),
         servers: this.getAdditionalServerData(result.servers)
       };
       console.log('username:' + user.username);
@@ -197,6 +197,21 @@ class Kirito {
     const currentLevelExperience = nextLevelMinExperience - currentLevelMinExperience;
     const userLevelExperience = experience - currentLevelMinExperience;
     return userLevelExperience * 100 / currentLevelExperience;
+  }
+
+  /**
+   * If the user has an avatar, the avatar is returned, otherwise an URL to
+   * a default avatar is returned.
+   * @param {Object} user - Discord API user object.
+   * @return {String} Avatar URL.
+   */
+  getAvatarUrl(user) {
+    let avatarUrl = user.staticAvatarURL;
+    if (!avatarUrl) {
+      const defaultAvatarIndex = Number(user.discriminator) % 100;
+      avatarUrl = './images/superheroes/heroes-and-villains-' + defaultAvatarIndex + '.png'
+    }
+    return avatarUrl;
   }
 
   /**
