@@ -144,14 +144,15 @@ class Kirito {
    * @param {Event} e - Discord API event.
    */
   handleChatCommand(e) {
-    e.message.channel.sendTyping();
     switch (e.message.content) {
       case 'ping':
+        e.message.channel.sendTyping();
         e.message.channel.sendMessage('pong');
         break;
 
       case 'profile':
         this.getProfile(e.message.author, (profile) => {
+          e.message.channel.sendTyping();
           e.message.channel.uploadFile(profile, 'profile.png');
         });
         break;
