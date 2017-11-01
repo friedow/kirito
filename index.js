@@ -1,6 +1,6 @@
 const fs = require('fs');
 const mongojs = require('mongojs');
-const discord = require('discordie');
+const Discordie = require('discordie');
 const handlebars = require('handlebars');
 const Screenshot = require('screenshot-stream');
 const winston = require('winston');
@@ -9,7 +9,7 @@ const winston = require('winston');
 class Kirito {
   constructor() {
     // Prepare discord api
-    this.discordApi = new discord({autoReconnect: true});
+    this.discordApi = new Discordie({autoReconnect: true});
     this.discordApi.connect({ token: process.env.AUTH_TOKEN });
 
     // Prepare database
@@ -77,7 +77,7 @@ class Kirito {
       'print an image of your current player profile.',
       '',
       'Enjoy your time in voice channels :).'
-    ]
+    ];
     e.guild.generalChannel.sendMessage(introduction);
   }
 
@@ -98,7 +98,7 @@ class Kirito {
     const rewardInterval = 60000;
     const experiencePerMinute = 1;
     const connectedUser = {};
-    connectedUser.experienceTimer = setInterval(() => { this.addExperience(user, server, experiencePerMinute) }, rewardInterval);
+    connectedUser.experienceTimer = setInterval(() => { this.addExperience(user, server, experiencePerMinute); }, rewardInterval);
     this.connectedUsers[user.id] = connectedUser;
     winston.log("info", 'User ' + user.username + ' connected to server ' + server.name + '.');
   }
@@ -132,9 +132,9 @@ class Kirito {
    * @param {Number} experience - Amount of experience to add.
    */
   addExperience(user, server, experience) {
-    this.db.users.update({id: user.id}, { $setOnInsert: user, $inc: { experience: experience } }, {upsert: true});
+    this.db.users.update({id: user.id}, { $setOnInsert: user, $inc: { experience } }, {upsert: true});
     this.db.users.update({id: user.id, 'servers.id': server.id}, {$inc: {'servers.$.experience': experience}} );
-    this.db.users.update({id: user.id, 'servers.id': {$ne: server.id}}, { $push: {'servers': {id: server.id, 'experience': experience}} }, (err, res) => {
+    this.db.users.update({id: user.id, 'servers.id': {$ne: server.id}}, { $push: {'servers': {id: server.id, experience}} }, (err, res) => {
       winston.log("info", 'Added ' + experience + ' experience to user ' + user.username + '.');
       winston.log("info", user.username + ' has now a total experience of ' + res.experience + '.');
     });
