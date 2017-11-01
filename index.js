@@ -8,7 +8,7 @@ const Screenshot = require('screenshot-stream');
 class Kirito {
   constructor() {
     // Prepare discord api
-    this.discordApi = new discord();
+    this.discordApi = new discord({autoReconnect: true});
     this.discordApi.connect({ token: process.env.AUTH_TOKEN });
 
     // Prepare database
@@ -144,14 +144,15 @@ class Kirito {
    * @param {Event} e - Discord API event.
    */
   handleChatCommand(e) {
-    e.message.channel.sendTyping();
     switch (e.message.content) {
       case 'ping':
+        e.message.channel.sendTyping();
         e.message.channel.sendMessage('pong');
         break;
 
       case 'profile':
         this.getProfile(e.message.author, (profile) => {
+          e.message.channel.sendTyping();
           e.message.channel.uploadFile(profile, 'profile.png');
         });
         break;
@@ -181,7 +182,7 @@ class Kirito {
       console.log('experience:' + result.experience);
       console.log('levelProgress:' + this.calculateLevelProgress(result.experience));
       console.log('servers:' + this.getAdditionalServerData(result.servers));
-      const profileHtmlFilename = 'profiles/' + user.username + '.html';
+      const profileHtmlFilename = 'profiles/' + user.id + '.html';
       this.createProfileHtml(profileHtmlFilename, profileInformation);
       const stream = this.createProfileImageStream(profileHtmlFilename);
 
