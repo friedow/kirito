@@ -8,7 +8,7 @@ const Screenshot = require('screenshot-stream');
 class Kirito {
   constructor() {
     // Prepare discord api
-    this.discordApi = new discord();
+    this.discordApi = new discord({autoReconnect: true});
     this.discordApi.connect({ token: process.env.AUTH_TOKEN });
 
     // Prepare database
