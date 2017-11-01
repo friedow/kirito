@@ -3,6 +3,7 @@ const mongojs = require('mongojs');
 const discord = require('discordie');
 const handlebars = require('handlebars');
 const Screenshot = require('screenshot-stream');
+const winston = require('winston');
 
 /** A Discord bot, which encourages players to join voice channels. */
 class Kirito {
@@ -99,7 +100,7 @@ class Kirito {
     const connectedUser = {};
     connectedUser.experienceTimer = setInterval(() => { this.addExperience(user, server, experiencePerMinute) }, rewardInterval);
     this.connectedUsers[user.id] = connectedUser;
-    console.log('User ' + user.username + ' connected to server ' + server.name + '.');
+    winston.log("info", 'User ' + user.username + ' connected to server ' + server.name + '.');
   }
 
   /**
@@ -116,12 +117,12 @@ class Kirito {
    */
   removeConnectedUser(user) {
     if (!this.connectedUsers[user.id]) {
-      console.log('User ' + user.username + ' not found in list of online users.');
+      winston.log("warn", 'User ' + user.username + ' not found in list of online users.');
       return;
     }
     clearInterval(this.connectedUsers[user.id].experienceTimer);
     delete this.connectedUsers[user.id];
-    console.log('User ' + user.username + ' disconnected.');
+    winston.log("info", 'User ' + user.username + ' disconnected.');
   }
 
   /**
@@ -134,8 +135,8 @@ class Kirito {
     this.db.users.update({id: user.id}, { $setOnInsert: user, $inc: { experience: experience } }, {upsert: true});
     this.db.users.update({id: user.id, 'servers.id': server.id}, {$inc: {'servers.$.experience': experience}} );
     this.db.users.update({id: user.id, 'servers.id': {$ne: server.id}}, { $push: {'servers': {id: server.id, 'experience': experience}} }, (err, res) => {
-      console.log('Added ' + experience + ' experience to user ' + user.username + '.');
-      console.log(user.username + ' has now a total experience of ' + res.experience + '.');
+      winston.log("info", 'Added ' + experience + ' experience to user ' + user.username + '.');
+      winston.log("info", user.username + ' has now a total experience of ' + res.experience + '.');
     });
   }
 
@@ -168,7 +169,7 @@ class Kirito {
   getProfile(user, callback) {
     const newUser = JSON.parse(JSON.stringify(user));
     newUser.experience = 0;
-    console.log('Printing profile for user ' + user.username + '.');
+    winston.log("info", 'Printing profile for user ' + user.username + '.');
     this.db.users.findAndModify({query: {id: user.id}, update: { $setOnInsert: newUser }, upsert: true, new: true}, (err, result) => {
       const profileInformation = {
         username: user.username,
@@ -177,11 +178,11 @@ class Kirito {
         avatar: this.getAvatarUrl(user),
         servers: this.getAdditionalServerData(result.servers)
       };
-      console.log('username:' + user.username);
-      console.log('level:' + this.calculateLevel(result.experience));
-      console.log('experience:' + result.experience);
-      console.log('levelProgress:' + this.calculateLevelProgress(result.experience));
-      console.log('servers:' + this.getAdditionalServerData(result.servers));
+      winston.log("info", 'username:' + user.username);
+      winston.log("info", 'level:' + this.calculateLevel(result.experience));
+      winston.log("info", 'experience:' + result.experience);
+      winston.log("info", 'levelProgress:' + this.calculateLevelProgress(result.experience));
+      winston.log("info", 'servers:' + this.getAdditionalServerData(result.servers));
       const profileHtmlFilename = 'profiles/' + user.id + '.html';
       this.createProfileHtml(profileHtmlFilename, profileInformation);
       const stream = this.createProfileImageStream(profileHtmlFilename);
