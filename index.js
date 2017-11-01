@@ -182,7 +182,7 @@ class Kirito {
       console.log('experience:' + result.experience);
       console.log('levelProgress:' + this.calculateLevelProgress(result.experience));
       console.log('servers:' + this.getAdditionalServerData(result.servers));
-      const profileHtmlFilename = 'profiles/' + user.username + '.html';
+      const profileHtmlFilename = 'profiles/' + user.id + '.html';
       this.createProfileHtml(profileHtmlFilename, profileInformation);
       const stream = this.createProfileImageStream(profileHtmlFilename);
 
