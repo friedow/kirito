@@ -61,3 +61,7 @@ typings/
 \.idea/
 
 \.DS_Store
+
+\.vscode/
+
+package-lock\.json
