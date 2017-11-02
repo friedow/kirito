@@ -2,7 +2,7 @@ const fs = require('fs');
 const mongojs = require('mongojs');
 const Discordie = require('discordie');
 const handlebars = require('handlebars');
-const Screenshot = require('screenshot-stream');
+const screenshot = require('screenshot-stream');
 const winston = require('winston');
 
 /** A Discord bot, which encourages players to join voice channels. */
@@ -232,7 +232,7 @@ class Kirito {
       avatarUrl = 'https://cdn.discordapp.com/avatars/' + user.id + '/' + user.avatar + '.png';
     } else {
       const defaultAvatarIndex = Number(user.id) % 100;
-      avatarUrl = './images/superheroes/heroes-and-villains-' + defaultAvatarIndex + '.png'
+      avatarUrl = './images/superheroes/heroes-and-villains-' + defaultAvatarIndex + '.png';
     }
     return avatarUrl;
   }
@@ -249,7 +249,7 @@ class Kirito {
       iconUrl = 'https://cdn.discordapp.com/icons/' + server.id + '/' + server.icon + '.png';
     } else {
       const defaultIconIndex = Number(server.id) % 100;
-      iconUrl = './images/superheroes/heroes-and-villains-' + defaultIconIndex + '.png'
+      iconUrl = './images/superheroes/heroes-and-villains-' + defaultIconIndex + '.png';
     }
     return iconUrl;
   }
@@ -271,7 +271,9 @@ class Kirito {
    */
   getAdditionalServerData(servers) {
     let serverList = [];
-    if (!servers) return [];
+    if (!servers) {
+      return [];
+    }
 
     servers.map((currentServer) => {
       const server = this.discordApi.Guilds.get(currentServer.id);
@@ -281,7 +283,7 @@ class Kirito {
       serverList.push(databaseServer);
     });
 
-    serverList.sort((a, b) => {b.experience - a.experience});
+    serverList.sort((a, b) => {b.experience - a.experience;});
     return serverList;
   }
 
@@ -298,7 +300,7 @@ class Kirito {
     const template = handlebars.compile(templateFile);
     const html = template(templateInformation);
     fs.writeFileSync(outputFilname, html);
-    return Screenshot(outputFilname, '500x1000', {crop: true, selector: '.main'});
+    return screenshot(outputFilname, '500x1000', {crop: true, selector: '.main'});
   }
 }
 
