@@ -33,11 +33,11 @@ class Kirito {
     this.handleChatCommand = this.handleChatCommand.bind(this);
 
     // Subscribe to events
-    this.discordApi.Dispatcher.on(discord.Events.GATEWAY_READY, this.prepareBot);
-    this.discordApi.Dispatcher.on(discord.Events.GUILD_CREATE, this.joinServer);
-    this.discordApi.Dispatcher.on(discord.Events.VOICE_CHANNEL_JOIN, this.userConnected);
-    this.discordApi.Dispatcher.on(discord.Events.VOICE_CHANNEL_LEAVE, this.userDisconnected);
-    this.discordApi.Dispatcher.on(discord.Events.MESSAGE_CREATE, this.handleChatCommand);
+    this.discordApi.Dispatcher.on(Discordie.Events.GATEWAY_READY, this.prepareBot);
+    this.discordApi.Dispatcher.on(Discordie.Events.GUILD_CREATE, this.joinServer);
+    this.discordApi.Dispatcher.on(Discordie.Events.VOICE_CHANNEL_JOIN, this.userConnected);
+    this.discordApi.Dispatcher.on(Discordie.Events.VOICE_CHANNEL_LEAVE, this.userDisconnected);
+    this.discordApi.Dispatcher.on(Discordie.Events.MESSAGE_CREATE, this.handleChatCommand);
   }
 
   /**
