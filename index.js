@@ -298,7 +298,7 @@ class Kirito {
     const template = handlebars.compile(templateFile);
     const html = template(templateInformation);
     fs.writeFileSync(outputFilname, html);
-    return Screenshot(outputFilname, '500x1000', {crop: true, selector: '.profile'});
+    return Screenshot(outputFilname, '500x1000', {crop: true, selector: '.main'});
   }
 }
 

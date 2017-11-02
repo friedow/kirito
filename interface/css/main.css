@@ -44,7 +44,7 @@
        url('fonts/roboto/Roboto-Bold.ttf')  format('truetype')
   }
 
-  body, h3, p, .username, .level {
+  body, h3, p, .title, .progress-bar {
     margin: 0;
     padding: 0;
   }
@@ -69,27 +69,27 @@
     font-weight: 400;
 
   }
-  .profile {
+  .main {
     width: 500px;
     background-image: url('../images/background.jpg');
     background-repeat: no-repeat;
     background-size: cover;
   }
-  .username, .level, .emblem-wrapper {
+  .title, .progress-bar, .logo-wrapper {
     text-align: center;
   }
 
-  .emblem-wrapper {
+  .logo-wrapper {
     position: relative;
     z-index: 1;
     padding: 100px 0px 0px 0px;
   }
-  .emblem {
+  .logo {
     height: 130px;
     border-radius: 50%;
   }
 
-  .username {
+  .title {
     padding: 75px 0px 10px 0px;
     background-color: #4C243B;
     opacity: 0.9;
@@ -97,44 +97,43 @@
     margin-top: -65px;
   }
 
-  .level {
+  .progress-bar {
     opacity: 0.9;
     margin-top: -20px;
     position: relative;
     background-color: #FFA552;
   }
-  .level-progress {
+  .progress-bar-progress {
     background-color: #BA5624;
     left: 0px;
     top: 0px;
-    width: {{levelProgress}}%;
     height: 100%;
     position: absolute;
   }
-  .level-title {
+  .progress-bar-title {
     z-index: 1;
     position: relative;
     color: white;
     padding: 10px 0px;
   }
 
-  .achievements {
+  .list {
     opacity: 0.9;
     margin-top: -20px;
     padding: 20px 40px;
     background-color: #4C243B;
   }
-  .achievement {
+  .list-item {
     padding: 20px;
     height: 50px;
   }
-  .achievement-icon {
+  .list-item-icon {
     height: 100%;
     display: inline-block;
     border-radius: 50%;
     margin-bottom: -8px;
   }
-  .achievement-text {
+  .list-item-text {
     display: inline-block;
     padding-left: 20px;
   }
