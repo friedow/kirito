@@ -205,7 +205,6 @@ class Kirito {
   getToplist(callback) {
     //get 10 users ordered by experience
     this.db.users.find().sort({experience: -1}).limit(10, (err, result) => {
-      console.log(result);
       const toplist = {
         toplist: []
       };
@@ -216,7 +215,6 @@ class Kirito {
           experience: user.experience
         })
       })
-      console.log(toplist);
       const templateFilename = 'interface/templates/toplist.html';
       const stream = this.getImageStream(templateFilename, toplist);
   
