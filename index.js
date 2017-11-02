@@ -202,6 +202,34 @@ class Kirito {
     });
   }
 
+  getToplist(callback) {
+    //get 10 users ordered by experience
+    this.db.users.find().sort({experience: -1}).limit(10, (err, result) => {
+      console.log(result);
+      const toplist = {
+        toplist: []
+      };
+      result.forEach((user) => {
+        toplist.toplist.push({
+          username: user.username,
+          avatar: this.getAvatarUrl(user),
+          experience: user.experience
+        })
+      })
+      console.log(toplist);
+      const templateFilename = 'interface/templates/toplist.html';
+      const stream = this.getImageStream(templateFilename, toplist);
+  
+      /**
+         * Is called when the profile creation finished and the image stream
+         * is ready.
+         * @callback callback
+         * @param {String} stream - Image stream containing the user profile.
+         */
+        callback(stream);
+    });
+  }
+
   /**
    * Calculates the level given a total amount of experience.
    * @param {Number} experience - Amount of experience.
