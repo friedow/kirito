@@ -183,9 +183,8 @@ class Kirito {
       winston.log("info", 'experience:' + result.experience);
       winston.log("info", 'levelProgress:' + this.calculateLevelProgress(result.experience));
       winston.log("info", 'servers:' + this.getAdditionalServerData(result.servers));
-      const profileHtmlFilename = 'profiles/' + user.id + '.html';
-      this.createProfileHtml(profileHtmlFilename, profileInformation);
-      const stream = this.createProfileImageStream(profileHtmlFilename);
+      const templateFilename = 'interface/templates/profile.html';
+      const stream = this.getImageStream(templateFilename, profileInformation);
 
       /**
        * Is called when the profile creation finished and the image stream
@@ -289,25 +288,18 @@ class Kirito {
   /**
    * Creates a HTML profile file containing user information based on
    * a profile template.
-   * @param {String} filename - Name and path of the HTML file.
-   * @param {Object} profileInformation - Information to fill the HTML profile.
-   */
-  createProfileHtml(filename, profileInformation) {
-    const templateFile = fs.readFileSync('Profile/Profile.html').toString();
-    const template = handlebars.compile(templateFile);
-    const html = template(profileInformation);
-    fs.writeFileSync(filename, html);
-  }
-
-  /**
-   * Creates an image stream given an HTML file.
-   * @param {String} filename - Name and path of the HTML file.
+   * @param {String} templateFilename - Path of the template Handlebars file.
+   * @param {Object} templateInformation - Information to fill the Handlebars teamplate with.
    * @return {String} Image stream.
    */
-  createProfileImageStream(filename) {
-    return Screenshot(filename, '500x1000', {crop: true, selector: '.profile'});
+  getImageStream(templateFilename, templateInformation) {
+    const outputFilname = "interface/x.html";
+    const templateFile = fs.readFileSync(templateFilename).toString();
+    const template = handlebars.compile(templateFile);
+    const html = template(templateInformation);
+    fs.writeFileSync(outputFilname, html);
+    return Screenshot(outputFilname, '500x1000', {crop: true, selector: '.profile'});
   }
-
 }
 
 const kiritoInstance = new Kirito();
