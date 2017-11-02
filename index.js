@@ -329,7 +329,8 @@ class Kirito {
    * @return {String} Image stream.
    */
   getImageStream(templateFilename, templateInformation) {
-    const outputFilname = "interface/x.html";
+    const randomFilename = Math.random().toString(36).substring(17);
+    const outputFilname = 'interface/' + randomFilename + '.html';
     const templateFile = fs.readFileSync(templateFilename).toString();
     const template = handlebars.compile(templateFile);
     const html = template(templateInformation);
