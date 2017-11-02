@@ -157,6 +157,12 @@ class Kirito {
           e.message.channel.uploadFile(profile, 'profile.png');
         });
         break;
+      case 'toplist':
+        this.getToplist((toplist) => {
+          e.message.channel.sendTyping();
+          e.message.channel.uploadFile(toplist, 'toplist.png');
+        });
+        break;
     }
   }
 
