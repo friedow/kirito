@@ -71,10 +71,9 @@ class Kirito {
       'Hi!',
       'I am Kirito, your personal voice chat coach. From now on, every time you join',
       'a voice channel on this Server you will receive experience and therefore level.',
-      'Additionally, you can ask me things through so called commands. Currently,',
-      'I know two commands. Command number one is `ping`, which obviously starts a',
-      'table tennis match, and command number two is called `profile` where I will',
-      'print an image of your current player profile.',
+      'Additionally, you can ask me things through so called commands. There are some',
+      'commands and the easiest way to start is by typing **help** to get an overview',
+      'of all the commands I know.',
       '',
       'Enjoy your time in voice channels :).'
     ];
@@ -150,7 +149,20 @@ class Kirito {
         e.message.channel.sendTyping();
         e.message.channel.sendMessage('pong');
         break;
-
+      case 'help':
+        e.message.channel.sendTyping();
+        const help = [
+          'Here is a list of commands Kirito will understand:',
+          '',
+          '**ping** - Obviously the command to start a table tennis match.',
+          '**help** - Prints a list of available commands.',
+          '**profile** - Shows your own profile.',
+          '**toplist** - Shows a player ranking by experience.',
+          '',
+          'Have Fun :)'
+        ];
+        e.message.channel.sendMessage(help);
+        break;
       case 'profile':
         this.getProfile(e.message.author, (profile) => {
           e.message.channel.sendTyping();
@@ -202,6 +214,11 @@ class Kirito {
     });
   }
 
+  /**
+   * Gathers necessary user data and prepares the image stream to print
+   * a list of users ranked by experience.
+   * @param {Callback} callback - Called when image stream is ready.
+   */
   getToplist(callback) {
     //get 10 users ordered by experience
     this.db.users.find().sort({experience: -1}).limit(10, (err, result) => {
