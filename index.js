@@ -214,7 +214,7 @@ class Kirito {
           avatar: this.getAvatarUrl(user),
           experience: user.experience
         });
-      })
+      });
       const templateFilename = 'interface/templates/toplist.html';
       const stream = this.getImageStream(templateFilename, toplist);
   
