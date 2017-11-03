@@ -1,0 +1,139 @@
+@font-face {
+    font-family: 'roboto';
+    font-weight: 200;
+    src: url('fonts/roboto/Roboto-Light.eot');
+    src: url('fonts/roboto/Roboto-Light.eot?#iefix') format('embedded-opentype'),
+       url('fonts/roboto/Roboto-Light.woff2') format('woff2'),
+       url('fonts/roboto/Roboto-Light.woff') format('woff'),
+       url('fonts/roboto/Roboto-Light.ttf')  format('truetype')
+  }
+  @font-face {
+    font-family: 'roboto';
+    font-weight: 300;
+    src: url('fonts/roboto/Roboto-Thin.eot');
+    src: url('fonts/roboto/Roboto-Thin.eot?#iefix') format('embedded-opentype'),
+       url('fonts/roboto/Roboto-Thin.woff2') format('woff2'),
+       url('fonts/roboto/Roboto-Thin.woff') format('woff'),
+       url('fonts/roboto/Roboto-Thin.ttf')  format('truetype')
+  }
+  @font-face {
+    font-family: 'roboto';
+    font-weight: normal;
+    src: url('fonts/roboto/Roboto-Regular.eot');
+    src: url('fonts/roboto/Roboto-Regular.eot?#iefix') format('embedded-opentype'),
+       url('fonts/roboto/Roboto-Regular.woff2') format('woff2'),
+       url('fonts/roboto/Roboto-Regular.woff') format('woff'),
+       url('fonts/roboto/Roboto-Regular.ttf')  format('truetype')
+  }
+  @font-face {
+    font-family: 'roboto';
+    font-weight: 500;
+    src: url('fonts/roboto/Roboto-Medium.eot');
+    src: url('fonts/roboto/Roboto-Medium.eot?#iefix') format('embedded-opentype'),
+       url('fonts/roboto/Roboto-Medium.woff2') format('woff2'),
+       url('fonts/roboto/Roboto-Medium.woff') format('woff'),
+       url('fonts/roboto/Roboto-Medium.ttf')  format('truetype')
+  }
+  @font-face {
+    font-family: 'roboto';
+    font-weight: bold;
+    src: url('fonts/roboto/Roboto-Bold.eot');
+    src: url('fonts/roboto/Roboto-Bold.eot?#iefix') format('embedded-opentype'),
+       url('fonts/roboto/Roboto-Bold.woff2') format('woff2'),
+       url('fonts/roboto/Roboto-Bold.woff') format('woff'),
+       url('fonts/roboto/Roboto-Bold.ttf')  format('truetype')
+  }
+
+  body, h3, p, .title, .progress-bar {
+    margin: 0;
+    padding: 0;
+  }
+  h1, h2, h3, p {
+    color: white;
+    font-family: roboto;
+  }
+  h1 {
+    letter-spacing: 3px;
+  }
+  h2 {
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+  h3 {
+    letter-spacing: 1px;
+    font-weight: 500;
+    font-size: 20px;
+  }
+  p {
+    letter-spacing: 0.5px;
+    font-weight: 400;
+
+  }
+  .main {
+    width: 500px;
+    background-image: url('../images/background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .title, .progress-bar, .logo-wrapper {
+    text-align: center;
+  }
+
+  .logo-wrapper {
+    position: relative;
+    z-index: 1;
+    padding: 100px 0px 0px 0px;
+  }
+  .logo {
+    height: 130px;
+    border-radius: 50%;
+  }
+
+  .title {
+    padding: 75px 0px 10px 0px;
+    background-color: #4C243B;
+    opacity: 0.9;
+    position: relative;
+    margin-top: -65px;
+  }
+
+  .progress-bar {
+    opacity: 0.9;
+    margin-top: -20px;
+    position: relative;
+    background-color: #FFA552;
+  }
+  .progress-bar-progress {
+    background-color: #BA5624;
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    position: absolute;
+  }
+  .progress-bar-title {
+    z-index: 1;
+    position: relative;
+    color: white;
+    padding: 10px 0px;
+  }
+
+  .list {
+    opacity: 0.9;
+    margin-top: -20px;
+    padding: 20px 40px;
+    background-color: #4C243B;
+  }
+  .list-item {
+    padding: 20px;
+    height: 50px;
+  }
+  .list-item-icon {
+    height: 100%;
+    display: inline-block;
+    border-radius: 50%;
+    margin-bottom: -8px;
+  }
+  .list-item-text {
+    display: inline-block;
+    padding-left: 20px;
+  }

@@ -1,14 +1,15 @@
 const fs = require('fs');
 const mongojs = require('mongojs');
-const discord = require('discordie');
+const Discordie = require('discordie');
 const handlebars = require('handlebars');
-const Screenshot = require('screenshot-stream');
+const screenshot = require('screenshot-stream');
+const winston = require('winston');
 
 /** A Discord bot, which encourages players to join voice channels. */
 class Kirito {
   constructor() {
     // Prepare discord api
-    this.discordApi = new discord({autoReconnect: true});
+    this.discordApi = new Discordie({autoReconnect: true});
     this.discordApi.connect({ token: process.env.AUTH_TOKEN });
 
     // Prepare database
@@ -32,11 +33,11 @@ class Kirito {
     this.handleChatCommand = this.handleChatCommand.bind(this);
 
     // Subscribe to events
-    this.discordApi.Dispatcher.on(discord.Events.GATEWAY_READY, this.prepareBot);
-    this.discordApi.Dispatcher.on(discord.Events.GUILD_CREATE, this.joinServer);
-    this.discordApi.Dispatcher.on(discord.Events.VOICE_CHANNEL_JOIN, this.userConnected);
-    this.discordApi.Dispatcher.on(discord.Events.VOICE_CHANNEL_LEAVE, this.userDisconnected);
-    this.discordApi.Dispatcher.on(discord.Events.MESSAGE_CREATE, this.handleChatCommand);
+    this.discordApi.Dispatcher.on(Discordie.Events.GATEWAY_READY, this.prepareBot);
+    this.discordApi.Dispatcher.on(Discordie.Events.GUILD_CREATE, this.joinServer);
+    this.discordApi.Dispatcher.on(Discordie.Events.VOICE_CHANNEL_JOIN, this.userConnected);
+    this.discordApi.Dispatcher.on(Discordie.Events.VOICE_CHANNEL_LEAVE, this.userDisconnected);
+    this.discordApi.Dispatcher.on(Discordie.Events.MESSAGE_CREATE, this.handleChatCommand);
   }
 
   /**
@@ -70,13 +71,12 @@ class Kirito {
       'Hi!',
       'I am Kirito, your personal voice chat coach. From now on, every time you join',
       'a voice channel on this Server you will receive experience and therefore level.',
-      'Additionally, you can ask me things through so called commands. Currently,',
-      'I know two commands. Command number one is `ping`, which obviously starts a',
-      'table tennis match, and command number two is called `profile` where I will',
-      'print an image of your current player profile.',
+      'Additionally, you can ask me things through so called commands. There are some',
+      'commands and the easiest way to start is by typing **help** to get an overview',
+      'of all the commands I know.',
       '',
       'Enjoy your time in voice channels :).'
-    ]
+    ];
     e.guild.generalChannel.sendMessage(introduction);
   }
 
@@ -97,9 +97,9 @@ class Kirito {
     const rewardInterval = 60000;
     const experiencePerMinute = 1;
     const connectedUser = {};
-    connectedUser.experienceTimer = setInterval(() => { this.addExperience(user, server, experiencePerMinute) }, rewardInterval);
+    connectedUser.experienceTimer = setInterval(() => { this.addExperience(user, server, experiencePerMinute); }, rewardInterval);
     this.connectedUsers[user.id] = connectedUser;
-    console.log('User ' + user.username + ' connected to server ' + server.name + '.');
+    winston.log("info", 'User ' + user.username + ' connected to server ' + server.name + '.');
   }
 
   /**
@@ -116,12 +116,12 @@ class Kirito {
    */
   removeConnectedUser(user) {
     if (!this.connectedUsers[user.id]) {
-      console.log('User ' + user.username + ' not found in list of online users.');
+      winston.log("warn", 'User ' + user.username + ' not found in list of online users.');
       return;
     }
     clearInterval(this.connectedUsers[user.id].experienceTimer);
     delete this.connectedUsers[user.id];
-    console.log('User ' + user.username + ' disconnected.');
+    winston.log("info", 'User ' + user.username + ' disconnected.');
   }
 
   /**
@@ -131,11 +131,11 @@ class Kirito {
    * @param {Number} experience - Amount of experience to add.
    */
   addExperience(user, server, experience) {
-    this.db.users.update({id: user.id}, { $setOnInsert: user, $inc: { experience: experience } }, {upsert: true});
+    this.db.users.update({id: user.id}, { $setOnInsert: user, $inc: { experience } }, {upsert: true});
     this.db.users.update({id: user.id, 'servers.id': server.id}, {$inc: {'servers.$.experience': experience}} );
-    this.db.users.update({id: user.id, 'servers.id': {$ne: server.id}}, { $push: {'servers': {id: server.id, 'experience': experience}} }, (err, res) => {
-      console.log('Added ' + experience + ' experience to user ' + user.username + '.');
-      console.log(user.username + ' has now a total experience of ' + res.experience + '.');
+    this.db.users.update({id: user.id, 'servers.id': {$ne: server.id}}, { $push: {'servers': {id: server.id, experience}} }, (err, res) => {
+      winston.log("info", 'Added ' + experience + ' experience to user ' + user.username + '.');
+      winston.log("info", user.username + ' has now a total experience of ' + res.experience + '.');
     });
   }
 
@@ -149,11 +149,30 @@ class Kirito {
         e.message.channel.sendTyping();
         e.message.channel.sendMessage('pong');
         break;
-
+      case 'help':
+        e.message.channel.sendTyping();
+        const help = [
+          'Here is a list of commands Kirito will understand:',
+          '',
+          '**ping** - Obviously the command to start a table tennis match.',
+          '**help** - Prints a list of available commands.',
+          '**profile** - Shows your own profile.',
+          '**toplist** - Shows a player ranking by experience.',
+          '',
+          'Have Fun :)'
+        ];
+        e.message.channel.sendMessage(help);
+        break;
       case 'profile':
         this.getProfile(e.message.author, (profile) => {
           e.message.channel.sendTyping();
           e.message.channel.uploadFile(profile, 'profile.png');
+        });
+        break;
+      case 'toplist':
+        this.getToplist((toplist) => {
+          e.message.channel.sendTyping();
+          e.message.channel.uploadFile(toplist, 'toplist.png');
         });
         break;
     }
@@ -168,7 +187,7 @@ class Kirito {
   getProfile(user, callback) {
     const newUser = JSON.parse(JSON.stringify(user));
     newUser.experience = 0;
-    console.log('Printing profile for user ' + user.username + '.');
+    winston.log("info", 'Printing profile for user ' + user.username + '.');
     this.db.users.findAndModify({query: {id: user.id}, update: { $setOnInsert: newUser }, upsert: true, new: true}, (err, result) => {
       const profileInformation = {
         username: user.username,
@@ -177,14 +196,13 @@ class Kirito {
         avatar: this.getAvatarUrl(user),
         servers: this.getAdditionalServerData(result.servers)
       };
-      console.log('username:' + user.username);
-      console.log('level:' + this.calculateLevel(result.experience));
-      console.log('experience:' + result.experience);
-      console.log('levelProgress:' + this.calculateLevelProgress(result.experience));
-      console.log('servers:' + this.getAdditionalServerData(result.servers));
-      const profileHtmlFilename = 'profiles/' + user.id + '.html';
-      this.createProfileHtml(profileHtmlFilename, profileInformation);
-      const stream = this.createProfileImageStream(profileHtmlFilename);
+      winston.log("info", 'username:' + user.username);
+      winston.log("info", 'level:' + this.calculateLevel(result.experience));
+      winston.log("info", 'experience:' + result.experience);
+      winston.log("info", 'levelProgress:' + this.calculateLevelProgress(result.experience));
+      winston.log("info", 'servers:' + this.getAdditionalServerData(result.servers));
+      const templateFilename = 'interface/templates/profile.html';
+      const stream = this.getImageStream(templateFilename, profileInformation);
 
       /**
        * Is called when the profile creation finished and the image stream
@@ -193,6 +211,37 @@ class Kirito {
        * @param {String} stream - Image stream containing the user profile.
        */
       callback(stream);
+    });
+  }
+
+  /**
+   * Gathers necessary user data and prepares the image stream to print
+   * a list of users ranked by experience.
+   * @param {Callback} callback - Called when image stream is ready.
+   */
+  getToplist(callback) {
+    //get 10 users ordered by experience
+    this.db.users.find().sort({experience: -1}).limit(10, (err, result) => {
+      const toplist = {
+        toplist: []
+      };
+      result.forEach((user) => {
+        toplist.toplist.push({
+          username: user.username,
+          avatar: this.getAvatarUrl(user),
+          experience: user.experience
+        });
+      });
+      const templateFilename = 'interface/templates/toplist.html';
+      const stream = this.getImageStream(templateFilename, toplist);
+  
+      /**
+         * Is called when the profile creation finished and the image stream
+         * is ready.
+         * @callback callback
+         * @param {String} stream - Image stream containing the user profile.
+         */
+        callback(stream);
     });
   }
 
@@ -232,7 +281,7 @@ class Kirito {
       avatarUrl = 'https://cdn.discordapp.com/avatars/' + user.id + '/' + user.avatar + '.png';
     } else {
       const defaultAvatarIndex = Number(user.id) % 100;
-      avatarUrl = './images/superheroes/heroes-and-villains-' + defaultAvatarIndex + '.png'
+      avatarUrl = './images/superheroes/heroes-and-villains-' + defaultAvatarIndex + '.png';
     }
     return avatarUrl;
   }
@@ -249,7 +298,7 @@ class Kirito {
       iconUrl = 'https://cdn.discordapp.com/icons/' + server.id + '/' + server.icon + '.png';
     } else {
       const defaultIconIndex = Number(server.id) % 100;
-      iconUrl = './images/superheroes/heroes-and-villains-' + defaultIconIndex + '.png'
+      iconUrl = './images/superheroes/heroes-and-villains-' + defaultIconIndex + '.png';
     }
     return iconUrl;
   }
@@ -271,7 +320,9 @@ class Kirito {
    */
   getAdditionalServerData(servers) {
     let serverList = [];
-    if (!servers) return [];
+    if (!servers) {
+      return [];
+    }
 
     servers.map((currentServer) => {
       const server = this.discordApi.Guilds.get(currentServer.id);
@@ -281,32 +332,26 @@ class Kirito {
       serverList.push(databaseServer);
     });
 
-    serverList.sort((a, b) => {b.experience - a.experience});
+    serverList.sort((a, b) => {b.experience - a.experience;});
     return serverList;
   }
 
   /**
    * Creates a HTML profile file containing user information based on
    * a profile template.
-   * @param {String} filename - Name and path of the HTML file.
-   * @param {Object} profileInformation - Information to fill the HTML profile.
-   */
-  createProfileHtml(filename, profileInformation) {
-    const templateFile = fs.readFileSync('Profile/Profile.html').toString();
-    const template = handlebars.compile(templateFile);
-    const html = template(profileInformation);
-    fs.writeFileSync(filename, html);
-  }
-
-  /**
-   * Creates an image stream given an HTML file.
-   * @param {String} filename - Name and path of the HTML file.
+   * @param {String} templateFilename - Path of the template Handlebars file.
+   * @param {Object} templateInformation - Information to fill the Handlebars teamplate with.
    * @return {String} Image stream.
    */
-  createProfileImageStream(filename) {
-    return Screenshot(filename, '500x1000', {crop: true, selector: '.profile'});
+  getImageStream(templateFilename, templateInformation) {
+    const randomFilename = Math.random().toString(36).substring(7);
+    const outputFilname = 'interface/' + randomFilename + '.html';
+    const templateFile = fs.readFileSync(templateFilename).toString();
+    const template = handlebars.compile(templateFile);
+    const html = template(templateInformation);
+    fs.writeFileSync(outputFilname, html);
+    return screenshot(outputFilname, '500x1000', {crop: true, selector: '.main'});
   }
-
 }
 
 const kiritoInstance = new Kirito();

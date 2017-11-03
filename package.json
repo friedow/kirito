@@ -29,6 +29,7 @@
     "handlebars": "^4.0.10",
     "mongodb": "^2.2.30",
     "mongojs": "^2.4.0",
-    "screenshot-stream": "^4.2.0"
+    "screenshot-stream": "^4.2.0",
+    "winston": "^2.4.0"
   }
 }
