@@ -71,10 +71,9 @@ class Kirito {
       'Hi!',
       'I am Kirito, your personal voice chat coach. From now on, every time you join',
       'a voice channel on this Server you will receive experience and therefore level.',
-      'Additionally, you can ask me things through so called commands. Currently,',
-      'I know two commands. Command number one is `ping`, which obviously starts a',
-      'table tennis match, and command number two is called `profile` where I will',
-      'print an image of your current player profile.',
+      'Additionally, you can ask me things through so called commands. There are some',
+      'commands and the easiest way to start is by typing **help** to get an overview',
+      'of all the commands I know.',
       '',
       'Enjoy your time in voice channels :).'
     ];
