@@ -150,7 +150,20 @@ class Kirito {
         e.message.channel.sendTyping();
         e.message.channel.sendMessage('pong');
         break;
-
+      case 'help':
+        e.message.channel.sendTyping();
+        const help = [
+          'Here is a list of commands Kirito will understand:',
+          '',
+          '**ping** - Obviously the command to start a table tennis match.',
+          '**help** - Prints a list of available commands.',
+          '**profile** - Shows your own profile.',
+          '**toplist** - Shows a player ranking by experience.',
+          '',
+          'Have Fun :)'
+        ];
+        e.message.channel.sendMessage(help);
+        break;
       case 'profile':
         this.getProfile(e.message.author, (profile) => {
           e.message.channel.sendTyping();
