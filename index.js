@@ -202,6 +202,11 @@ class Kirito {
     });
   }
 
+  /**
+   * Gathers necessary user data and prepares the image stream to print
+   * a list of users ranked by experience.
+   * @param {Callback} callback - Called when image stream is ready.
+   */
   getToplist(callback) {
     //get 10 users ordered by experience
     this.db.users.find().sort({experience: -1}).limit(10, (err, result) => {
