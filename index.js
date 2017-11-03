@@ -157,6 +157,12 @@ class Kirito {
           e.message.channel.uploadFile(profile, 'profile.png');
         });
         break;
+      case 'toplist':
+        this.getToplist((toplist) => {
+          e.message.channel.sendTyping();
+          e.message.channel.uploadFile(toplist, 'toplist.png');
+        });
+        break;
     }
   }
 
@@ -193,6 +199,32 @@ class Kirito {
        * @param {String} stream - Image stream containing the user profile.
        */
       callback(stream);
+    });
+  }
+
+  getToplist(callback) {
+    //get 10 users ordered by experience
+    this.db.users.find().sort({experience: -1}).limit(10, (err, result) => {
+      const toplist = {
+        toplist: []
+      };
+      result.forEach((user) => {
+        toplist.toplist.push({
+          username: user.username,
+          avatar: this.getAvatarUrl(user),
+          experience: user.experience
+        });
+      });
+      const templateFilename = 'interface/templates/toplist.html';
+      const stream = this.getImageStream(templateFilename, toplist);
+  
+      /**
+         * Is called when the profile creation finished and the image stream
+         * is ready.
+         * @callback callback
+         * @param {String} stream - Image stream containing the user profile.
+         */
+        callback(stream);
     });
   }
 
@@ -295,7 +327,8 @@ class Kirito {
    * @return {String} Image stream.
    */
   getImageStream(templateFilename, templateInformation) {
-    const outputFilname = "interface/x.html";
+    const randomFilename = Math.random().toString(36).substring(7);
+    const outputFilname = 'interface/' + randomFilename + '.html';
     const templateFile = fs.readFileSync(templateFilename).toString();
     const template = handlebars.compile(templateFile);
     const html = template(templateInformation);
