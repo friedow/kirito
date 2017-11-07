@@ -227,6 +227,8 @@ class Kirito {
   /**
    * Gathers necessary user data and prepares the image stream to print
    * a list of users ranked by experience.
+   * @param {Array} args - Chat arguments.
+   * @param {Number} serverId - ID of the Server if a server specific toplist should be printed.
    * @param {Callback} callback - Called when image stream is ready.
    */
   getToplist(args, serverId, callback) {
@@ -253,7 +255,7 @@ class Kirito {
          * Is called when the profile creation finished and the image stream
          * is ready.
          * @callback callback
-         * @param {String} stream - Image stream containing the user profile.
+         * @param {String} stream - Image stream containing the toplist.
          */
         callback(stream);
     });
