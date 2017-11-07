@@ -236,7 +236,7 @@ class Kirito {
       toplist: []
     };
     let where;
-    if (args[1] == 'server' && server) {
+    if (args[1] === 'server' && server) {
       where = { servers: { $elemMatch: { id: server.id } } };
       toplistInformation.title = server.name;
     }
