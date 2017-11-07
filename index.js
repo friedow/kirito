@@ -144,10 +144,17 @@ class Kirito {
    * @param {Event} e - Discord API event.
    */
   handleChatCommand(e) {
+    if (e.message.author.bot) {
+      return;
+    }
     switch (e.message.content) {
       case 'ping':
         e.message.channel.sendTyping();
         e.message.channel.sendMessage('pong');
+        break;
+      case 'pong':
+        e.message.channel.sendTyping();
+        e.message.channel.sendMessage('ping');
         break;
       case 'help':
         e.message.channel.sendTyping();
