@@ -137,6 +137,13 @@ class Kirito {
       winston.log("info", 'Added ' + experience + ' experience to user ' + user.username + '.');
       winston.log("info", user.username + ' has now a total experience of ' + res.experience + '.');
     });
+
+    if(user.gameName) {
+      this.db.users.update({id: user.id, 'games.name': user.gameName}, {$inc: {'games.$.experience': experience}} );
+      this.db.users.update({id: user.id, 'games.name': {$ne: user.gameName}}, { $push: {'games': {name: user.gameName, experience}} }, (err, res) => {
+        winston.log("info", 'Added ' + experience + ' game experience to user ' + user.username + '.');
+      });
+    }
   }
 
   /**
