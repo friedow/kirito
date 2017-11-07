@@ -178,9 +178,8 @@ class Kirito {
         });
         break;
       case 'toplist':
-        console.log('test');
-        const guildId = e.message.channel.guild_id;
-        this.getToplist(args, guildId, (toplist) => {
+        const guild = e.message.channel.guild;
+        this.getToplist(args, guild, (toplist) => {
           e.message.channel.sendTyping();
           e.message.channel.uploadFile(toplist, 'toplist.png');
         });
@@ -228,28 +227,30 @@ class Kirito {
    * Gathers necessary user data and prepares the image stream to print
    * a list of users ranked by experience.
    * @param {Array} args - Chat arguments.
-   * @param {Number} serverId - ID of the Server if a server specific toplist should be printed.
+   * @param {Object} server - The Server if a server specific toplist should be printed.
    * @param {Callback} callback - Called when image stream is ready.
    */
-  getToplist(args, serverId, callback) {
+  getToplist(args, server, callback) {
+    const toplistInformation = {
+      title: 'World',
+      toplist: []
+    };
     let where;
-    if (args[1] == 'server' && serverId) {
-      where = { servers: { $elemMatch: { id: serverId } } };
+    if (args[1] == 'server' && server) {
+      where = { servers: { $elemMatch: { id: server.id } } };
+      toplistInformation.title = server.name;
     }
     //get 10 users ordered by experience
     this.db.users.find(where).sort({experience: -1}).limit(10, (err, result) => {
-      const toplist = {
-        toplist: []
-      };
       result.forEach((user) => {
-        toplist.toplist.push({
+        toplistInformation.toplist.push({
           username: user.username,
           avatar: this.getAvatarUrl(user),
           experience: user.experience
         });
       });
       const templateFilename = 'interface/templates/toplist.html';
-      const stream = this.getImageStream(templateFilename, toplist);
+      const stream = this.getImageStream(templateFilename, toplistInformation);
 
       /**
          * Is called when the profile creation finished and the image stream
