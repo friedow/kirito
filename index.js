@@ -147,7 +147,8 @@ class Kirito {
     if (e.message.author.bot) {
       return;
     }
-    switch (e.message.content) {
+    const args = e.message.content.split(' ');
+    switch (args[0]) {
       case 'ping':
         e.message.channel.sendTyping();
         e.message.channel.sendMessage('pong');
@@ -177,7 +178,9 @@ class Kirito {
         });
         break;
       case 'toplist':
-        this.getToplist((toplist) => {
+        console.log('test');
+        const guildId = e.message.channel.guild_id;
+        this.getToplist(args, guildId, (toplist) => {
           e.message.channel.sendTyping();
           e.message.channel.uploadFile(toplist, 'toplist.png');
         });
@@ -226,9 +229,13 @@ class Kirito {
    * a list of users ranked by experience.
    * @param {Callback} callback - Called when image stream is ready.
    */
-  getToplist(callback) {
+  getToplist(args, serverId, callback) {
+    let where;
+    if (args[1] == 'server' && serverId) {
+      where = { servers: { $elemMatch: { id: serverId } } };
+    }
     //get 10 users ordered by experience
-    this.db.users.find().sort({experience: -1}).limit(10, (err, result) => {
+    this.db.users.find(where).sort({experience: -1}).limit(10, (err, result) => {
       const toplist = {
         toplist: []
       };
@@ -241,7 +248,7 @@ class Kirito {
       });
       const templateFilename = 'interface/templates/toplist.html';
       const stream = this.getImageStream(templateFilename, toplist);
-  
+
       /**
          * Is called when the profile creation finished and the image stream
          * is ready.
