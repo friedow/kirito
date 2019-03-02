@@ -1,6 +1,7 @@
 const fs = require('fs');
 const mongojs = require('mongojs');
 const Discordie = require('discordie');
+const Igdb = require('igdb-api-node').default;
 const handlebars = require('handlebars');
 const screenshot = require('screenshot-stream');
 const winston = require('winston');
@@ -11,6 +12,9 @@ class Kirito {
     // Prepare discord api
     this.discordApi = new Discordie({autoReconnect: true});
     this.discordApi.connect({ token: process.env.AUTH_TOKEN });
+
+    // Prepare Igdb api
+    this.igdbApi = Igdb(process.env.IGDB_API_KEY);
 
     // Prepare database
     this.db = mongojs(process.env.DATABASE, ['users']);
@@ -96,10 +100,25 @@ class Kirito {
   addConnectedUser(user, server) {
     const rewardInterval = 60000;
     const experiencePerMinute = 1;
-    const connectedUser = {};
-    connectedUser.experienceTimer = setInterval(() => { this.addExperience(user, server, experiencePerMinute); }, rewardInterval);
-    this.connectedUsers[user.id] = connectedUser;
-    winston.log("info", 'User ' + user.username + ' connected to server ' + server.name + '.');
+
+    if (!this.connectedUsers[user.id]){
+      const connectedUser = {};
+      connectedUser.server = server;
+      connectedUser.experienceTimer = setInterval(() => { this.addExperience(user, server, experiencePerMinute); }, rewardInterval);
+      this.connectedUsers[user.id] = connectedUser;
+      winston.log("info", 'User ' + user.username + ' connected to server ' + server.name + '.');
+    } else if (this.connectedUsers[user.id].server != server) {
+      this.removeConnectedUser(user);
+      const connectedUser = {};
+      connectedUser.server = server;
+      connectedUser.experienceTimer = setInterval(() => { this.addExperience(user, server, experiencePerMinute); }, rewardInterval);
+      this.connectedUsers[user.id] = connectedUser;
+      winston.log("info", 'User ' + user.username + ' connected to server ' + server.name + '.');
+      
+    } else {
+      winston.log("info", 'User ' + user.username + ' is already connected to server ' + server.name + '.');
+    }
+    
   }
 
   /**
@@ -179,7 +198,7 @@ class Kirito {
         e.message.channel.sendMessage(help);
         break;
       case 'profile':
-        this.getProfile(e.message.author, (profile) => {
+        this.getProfile(args, e.message.author, (profile) => {
           e.message.channel.sendTyping();
           e.message.channel.uploadFile(profile, 'profile.png');
         });
@@ -197,10 +216,11 @@ class Kirito {
   /**
    * Gathers necessary user data and prepares the image stream to print
    * a users profile.
+   * @param {Array} args - Chat arguments.
    * @param {Object} user - Discord API user object.
    * @param {Callback} callback - Called when image stream is ready.
    */
-  getProfile(user, callback) {
+  getProfile(args, user, callback) {
     const newUser = JSON.parse(JSON.stringify(user));
     newUser.experience = 0;
     winston.log("info", 'Printing profile for user ' + user.username + '.');
@@ -209,9 +229,13 @@ class Kirito {
         username: user.username,
         level: this.calculateLevel(result.experience),
         levelProgress: this.calculateLevelProgress(result.experience),
-        avatar: this.getAvatarUrl(user),
-        servers: this.getAdditionalServerData(result.servers)
+        avatar: this.getAvatarUrl(user)
       };
+      if (args[1] === 'games') {
+        profileInformation['list'] = this.getAdditionalGameData(result.games);
+      } else {
+        profileInformation['list'] = this.getAdditionalServerData(result.servers)
+      }
       winston.log("info", 'username:' + user.username);
       winston.log("info", 'level:' + this.calculateLevel(result.experience));
       winston.log("info", 'experience:' + result.experience);
@@ -358,6 +382,41 @@ class Kirito {
 
     serverList.sort((a, b) => {b.experience - a.experience;});
     return serverList;
+  }
+
+  /**
+   * Fetches additional information for a given list of games through the IGDB API.
+   * @param {Array} games - List of games.
+   * @return {Array} List of games with additional information.
+   */
+  async getAdditionalGameData(games) {
+    let gameList = [];
+    if (!games) {
+      return [];
+    }
+
+    await Promise.all(games.map( async (currentGame) => {
+      const game = await this.igdbApi.games({
+        fields: 'id,cover', // Return all fields
+        limit: 1, // Limit to 5 results
+        search: currentGame.name
+      });
+      console.log(game.body[0]);
+      let iconUrl = '';
+      if(game.body[0]) {
+        iconUrl = this.igdbApi.image({ cloudinary_id: game.body[0].cover.cloudinary_id }, 'thumb', 'jpg');
+      }
+      
+      const databaseGame = {
+        iconURL: iconUrl,
+        experience: currentGame.experience
+      };
+      
+      gameList.push(databaseGame);
+    }));
+
+    gameList.sort((a, b) => {b.experience - a.experience;});
+    return gameList;
   }
 
   /**
