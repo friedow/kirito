@@ -1,10 +1,16 @@
 {
   "name": "kirito",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "description": "A Discord voice encourage bot.",
-  "main": "index.js",
+  "main": "src/app.ts",
   "scripts": {
-    "start": "node index.js"
+    "start": "nodemon",
+    "lint": "tslint -p tsconfig.json",
+    "server": "ts-node -r tsconfig-paths/register src/app.ts",
+    "dev": "npm run lint && npm run server",
+    "build": "tsc && cp src/swagger.json build/src/swagger.json",
+    "production": "node -r tsconfig-paths/register build/src/app.js",
+    "test": "mocha -t 30000 -r tsconfig-paths/register -r ts-node/register test/**/*.spec.ts"
   },
   "repository": {
     "type": "git",
@@ -15,8 +21,7 @@
     "Discord",
     "Voice",
     "Encouragement",
-    "Leveling",
-    "System"
+    "Leveling System"
   ],
   "author": "Christian Friedow",
   "license": "MIT",
@@ -25,11 +30,17 @@
   },
   "homepage": "https://github.com/friedow/kirito#readme",
   "dependencies": {
-    "discordie": "^0.11.0",
+    "@types/mongoose": "^5.3.7",
+    "mongoose": "^5.4.3",
+    "tsconfig-paths": "^3.4.2",
     "handlebars": "^4.0.10",
-    "mongodb": "^2.2.30",
-    "mongojs": "^2.4.0",
     "screenshot-stream": "^4.2.0",
     "winston": "^2.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.5",
+    "ts-node": "^7.0.0",
+    "tslint": "^5.10.0",
+    "typescript": "^2.8.3"
   }
 }
