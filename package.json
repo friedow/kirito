@@ -31,10 +31,11 @@
   "homepage": "https://github.com/friedow/kirito#readme",
   "dependencies": {
     "@types/mongoose": "^5.3.7",
-    "mongoose": "^5.4.3",
-    "tsconfig-paths": "^3.4.2",
+    "discord.js": "^11.4.2",
     "handlebars": "^4.0.10",
+    "mongoose": "^5.4.3",
     "screenshot-stream": "^4.2.0",
+    "tsconfig-paths": "^3.4.2",
     "winston": "^2.4.0"
   },
   "devDependencies": {

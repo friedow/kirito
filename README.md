@@ -4,7 +4,7 @@ A Discord bot, which encourages players to join voice channels.
 ## Installation
 
 ### Cloud based (simple)
-Use the cloud based solution to [add Kirito to your Discord Server](https://discordapp.com/oauth2/authorize?&client_id=340419258045562882&scope=bot).
+Use the cloud based solution to [add Kirito to your Discord Server](https://discordapp.com/api/oauth2/authorize?client_id=340419258045562882&permissions=402705408&scope=bot).
 
 ### Self-hosted (advanced)
 You can set up your own instance of Kirito using the [Docker image](https://hub.docker.com/r/friedow/kirito/).
@@ -19,7 +19,7 @@ You can set up your own instance of Kirito using the [Docker image](https://hub.
 
 1. Add your bot to a server of your choice. (Change the link to match you bots client ID)
 
-  https://discordapp.com/oauth2/authorize?&client_id=BOT_CLIENT_ID_HERE&scope=bot
+  https://discordapp.com/api/oauth2/authorize?client_id=[BOT_CLIENT_ID_HERE]&permissions=402705408&scope=bot
 
 1. Under "APP BOT USER > Token" press "click to reveal" and copy the token.
 

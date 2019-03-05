@@ -8,7 +8,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [ "src/*", "build/src/*" ],
+      "@/*": [ "src/*" ],
       "@test/*": [ "test/*" ]
     },
     "lib": [
