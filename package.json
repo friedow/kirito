@@ -10,7 +10,7 @@
     "dev": "npm run lint && npm run server",
     "build": "tsc && cp src/swagger.json build/src/swagger.json",
     "production": "node -r tsconfig-paths/register build/src/app.js",
-    "test": "npm run tslint"
+    "test": "npm run lint"
   },
   "repository": {
     "type": "git",
