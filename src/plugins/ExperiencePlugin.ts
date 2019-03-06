@@ -1,5 +1,5 @@
 import Discord from 'discord.js';
-import User from '@/models/user';
+import UserModel from '@/models/UserModel';
 
 export default class ExperiencePlugin {
   private static experienceRewardInterval = 60000;
@@ -35,7 +35,7 @@ export default class ExperiencePlugin {
     const connectedUsers = this.getCurrentlyConnectedUsers();
 
     for (const connectedUser of connectedUsers) {
-      const dbUser = await User.findOne({ userId: connectedUser.id }).exec();
+      const dbUser = await UserModel.findOne({ userId: connectedUser.id }).exec();
 
       if (dbUser) {
         const guildIndex = dbUser.guilds.findIndex((guild) => guild.guildId === connectedUser.guild.id);
@@ -53,7 +53,7 @@ export default class ExperiencePlugin {
         await dbUser.save();
 
       } else {
-        User.create([
+        UserModel.create([
           {
             userId: connectedUser.id,
             guilds: [

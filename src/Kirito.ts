@@ -2,6 +2,7 @@ import Discord from 'discord.js';
 import mongoose from 'mongoose';
 import winston from 'winston';
 import ExperiencePlugin from './plugins/ExperiencePlugin';
+import ProfilePlugin from './plugins/ProfilePlugin';
 
 export default class Kirito {
   private discord: Discord.Client;
@@ -18,6 +19,7 @@ export default class Kirito {
     await this.subscribeToDiscordEvents();
     await this.connectToDiscord();
     this.plugins.push(new ExperiencePlugin(this.discord));
+    this.plugins.push(new ProfilePlugin(this.discord));
   }
 
   private async connectToDatabase(): Promise<any> {
