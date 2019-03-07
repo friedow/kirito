@@ -8,6 +8,8 @@ const userSchema = new Schema({
     guilds: Array,
 });
 
+userSchema.loadClass(User);
+
 const UserModel: Model<IUserModel> = model('User', userSchema);
 
 export default UserModel;
