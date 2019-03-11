@@ -11,13 +11,14 @@
       </div>
       <div class="title">
         <h1>Toplist</h1>
+        <h2>{{this.guild.name}}</h2>
       </div>
       <div class="list">
-        {{#each toplist}}
+        {{#each users}}
           <div class="list-item">
-            <img src="{{this.avatar}}" class="list-item-icon"></img>
+            <img src="{{this.discord.avatarURL}}" class="list-item-icon"></img>
             <div class="list-item-text">
-              <h3 class="list-item-title">{{this.username}}</h2>
+              <h3 class="list-item-title">{{this.discord.username}}</h2>
               <p class="list-item-description">{{this.experience}} Experience</p>
             </div>
           </div>

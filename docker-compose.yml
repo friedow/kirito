@@ -1,0 +1,16 @@
+version: '3'
+services:
+    kirito:
+        image: friedow/kirito:latest
+        environment:
+            - MONGO_HOST=mongo
+            - AUTH_TOKEN=SECRET
+        networks:
+            - kirito-network
+    mongo:
+        image: mongo:latest
+        networks:
+            - kirito-network
+networks:
+    kirito-network:
+        driver: overlay
