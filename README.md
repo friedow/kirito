@@ -25,13 +25,8 @@ You can set up your own instance of Kirito using the [Docker image](https://hub.
 
   Hint: This is your bots application authentication token. Do not give post it while asking for help or give it to anyone.
 
-1. Start a mongo instance.
-
-  ```docker run --name mongo -d mongo```
-
-1. Start a Kirito instance using your bots application authentication token.
-
-  ```docker run --name mongo --link mongo:mongo -e "AUTH_TOKEN=BOT_AUTH_TOKEN_HERE" -e "DATABASE=mongo/kirito" -d friedow/kirito```
+1. Deploy the service using docker compose or docker stack: 
+  ```docker-compose up``` or ```docker stack deploy -c docker-compose.yml kirito```.
 
 
 ## Development
