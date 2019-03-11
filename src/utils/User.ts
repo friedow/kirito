@@ -13,6 +13,7 @@ export default class User {
 
   public userId: Discord.Snowflake;
   public guilds: Guild[];
+  public discord!: Discord.User;
 
   constructor(id: Discord.Snowflake, guilds: Guild[]) {
     this.userId = id;
@@ -46,5 +47,12 @@ export default class User {
     const currentLevelExperience = nextLevelMinExperience - levelMinExperience;
     const userLevelExperience = this.experience - levelMinExperience;
     return userLevelExperience * 100 / currentLevelExperience;
+  }
+
+  public fetchUser(discordClient: Discord.Client): void {
+    for (const guild of this.guilds) {
+      guild.discord = discordClient.guilds.find(g => g.id === guild.guildId);
+    }
+    this.discord = discordClient.users.find((u) => u.id === this.userId);
   }
 }

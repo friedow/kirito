@@ -2,12 +2,19 @@ import fs from 'fs';
 import handlebars from 'handlebars';
 import Pageres from 'pageres';
 import path from 'path';
-import UserProfile from '@/interfaces/UserProfile';
+import Profile from '@/interfaces/Profile';
+import Toplist from '@/interfaces/Toplist';
+import User from '@/utils/User';
 
 export default class TemplateUtil {
-  public static async getProfilePng(profile: UserProfile): Promise<string> {
+  public static async getProfilePng(user: User): Promise<string> {
     const profileTemplateFile = `${process.cwd()}/src/interface/templates/profile.html`;
-    return TemplateUtil.hbsToPng(profileTemplateFile, profile);
+    return TemplateUtil.hbsToPng(profileTemplateFile, user);
+  }
+
+  public static async getToplistPng(toplist: Toplist): Promise<string> {
+    const toplistTemplateFile = `${process.cwd()}/src/interface/templates/toplist.html`;
+    return TemplateUtil.hbsToPng(toplistTemplateFile, toplist);
   }
 
   private static async hbsToPng(templateFile: string, templateContext: any): Promise<string> {

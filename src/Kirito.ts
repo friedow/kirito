@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import winston from 'winston';
 import ExperiencePlugin from './plugins/ExperiencePlugin';
 import ProfilePlugin from './plugins/ProfilePlugin';
+import ConversationPlugin from './plugins/ConversationPlugin';
+import ToplistPlugin from './plugins/ToplistPlugin';
 
 export default class Kirito {
   private discord: Discord.Client;
@@ -18,8 +20,10 @@ export default class Kirito {
     winston.info(`Successfully connected to mongoDB.`);
     await this.subscribeToDiscordEvents();
     await this.connectToDiscord();
+    this.plugins.push(new ConversationPlugin(this.discord));
     this.plugins.push(new ExperiencePlugin(this.discord));
     this.plugins.push(new ProfilePlugin(this.discord));
+    this.plugins.push(new ToplistPlugin(this.discord));
   }
 
   private async connectToDatabase(): Promise<any> {

@@ -35,29 +35,15 @@ export default class ProfilePlugin extends Plugin {
     }
   }
 
-  private async getProfile(user: Discord.User): Promise<string> {
-    let dbUser = await UserModel.findOne({ userId: user.id }).exec();
+  private async getProfile(discordUser: Discord.User): Promise<string> {
+    let user = await UserModel.findOne({ userId: discordUser.id }).exec();
 
-    if (!dbUser) {
-      dbUser = await UserModel.create(new User(user.id, []));
+    if (!user) {
+      user = await UserModel.create(new User(discordUser.id, []));
     }
 
-    const profileInformation = {
-      username: user.username,
-      level: dbUser.level,
-      levelProgress: dbUser.experience,
-      avatar: user.avatarURL,
-      servers: this.fetchGuildData(dbUser.guilds),
-    };
+    user.fetchUser(this.discord);
 
-    return TemplateUtil.getProfilePng(profileInformation);
-  }
-
-  private fetchGuildData(guilds: Guild[]): GuildWithExperience[] {
-    return guilds.map((guild) => {
-      const guildWithExperience = (this.discord.guilds.find('id', guild.guildId) as GuildWithExperience);
-      guildWithExperience.experience = guild.experience;
-      return guildWithExperience;
-    });
+    return TemplateUtil.getProfilePng(user);
   }
 }

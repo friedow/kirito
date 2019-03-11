@@ -1,5 +1,6 @@
 import Discord from 'discord.js';
 import UserModel from '@/models/UserModel';
+import Guild from '@/utils/Guild';
 
 export default class ExperiencePlugin {
   private static experienceRewardInterval = 60000;
@@ -44,10 +45,7 @@ export default class ExperiencePlugin {
           dbUser.guilds[guildIndex].experience += 1;
 
         } else {
-          dbUser.guilds.push({
-            guildId: connectedUser.guild.id,
-            experience: 1,
-          });
+          dbUser.guilds.push(new Guild(connectedUser.guild.id));
         }
         dbUser.markModified('guilds');
         await dbUser.save();
