@@ -7,21 +7,21 @@
   <body>
     <div class="main">
       <div class="logo-wrapper">
-        <img class="logo" src="{{avatar}}"></img>
+        <img class="logo" src="{{discord.avatarURL}}"></img>
       </div>
       <div class="title">
-        <h1>{{username}}</h1>
+        <h1>{{discord.username}}</h1>
       </div>
       <div class="progress-bar">
         <span class="progress-bar-progress" style="width: {{levelProgress}}%;"></span>
         <h2 class="progress-bar-title">Level {{level}}</h2>
       </div>
       <div class="list">
-        {{#each servers}}
+        {{#each guilds}}
           <div class="list-item">
-            <img src="{{this.iconURL}}" class="list-item-icon"></img>
+            <img src="{{this.discord.iconURL}}" class="list-item-icon"></img>
             <div class="list-item-text">
-              <h3 class="list-item-title">{{this.name}}</h2>
+              <h3 class="list-item-title">{{this.discord.name}}</h2>
               <p class="list-item-description">{{this.experience}} Experience</p>
             </div>
           </div>
