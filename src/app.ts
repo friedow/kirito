@@ -1,4 +1,4 @@
-import Kirito from '@/Kirito.ts';
+import Kirito from '@/Kirito';
 
 const kirito = new Kirito();
 

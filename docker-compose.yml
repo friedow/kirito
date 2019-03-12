@@ -4,7 +4,7 @@ services:
         image: friedow/kirito:latest
         environment:
             - MONGO_HOST=mongo
-            - AUTH_TOKEN=SECRET
+            - AUTH_TOKEN=***REMOVED***
         networks:
             - kirito-network
     mongo:
