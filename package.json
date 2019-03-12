@@ -8,8 +8,8 @@
     "lint": "tslint -p tsconfig.json",
     "server": "ts-node -r tsconfig-paths/register src/app.ts",
     "dev": "npm run lint && npm run server",
-    "build": "tsc && cp src/swagger.json build/src/swagger.json",
-    "production": "node -r tsconfig-paths/register build/src/app.js",
+    "build": "tsc",
+    "production": "node -r tsconfig-paths/register build/app.js",
     "test": "npm run lint"
   },
   "repository": {
