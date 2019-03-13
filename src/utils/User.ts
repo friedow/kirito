@@ -51,7 +51,7 @@ export default class User {
 
   public fetchUser(discordClient: Discord.Client): void {
     for (const guild of this.guilds) {
-      guild.discord = discordClient.guilds.find(g => g.id === guild.guildId);
+      guild.discord = discordClient.guilds.find((g) => g.id === guild.guildId);
     }
     this.discord = discordClient.users.find((u) => u.id === this.userId);
   }

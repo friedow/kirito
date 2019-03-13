@@ -1,9 +1,9 @@
 import fs from 'fs';
 import handlebars from 'handlebars';
-import Pageres from 'pageres';
-import path from 'path';
 import Toplist from '@/interfaces/Toplist';
 import User from '@/utils/User';
+
+const puppeteer = require('puppeteer');
 
 export default class TemplateUtil {
   public static async getProfilePng(user: User): Promise<string> {
@@ -36,11 +36,14 @@ export default class TemplateUtil {
   }
 
   private static async htmlToPng(file: string, outputFile: string): Promise<string> {
-    const outputFilename = path.basename(outputFile, '.png');
-    await new Pageres()
-      .src(file, ['500x1000'], {crop: true, selector: '.main', filename: outputFilename})
-      .dest(path.dirname(file))
-      .run();
+    const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+    const page = await browser.newPage();
+    await page.goto(`file://${file}`);
+    const element = await page.$('.main');
+    if (element) {
+      await element.screenshot({path: outputFile});
+    }
+    await browser.close();
 
     return outputFile;
   }

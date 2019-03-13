@@ -17,10 +17,8 @@
     "url": "git+https://github.com/friedow/kirito.git"
   },
   "keywords": [
-    "Bot",
-    "Discord",
-    "Voice",
-    "Encouragement",
+    "Discord Bot",
+    "Voice Channel Promotion",
     "Leveling System"
   ],
   "author": "Christian Friedow",
@@ -30,16 +28,15 @@
   },
   "homepage": "https://github.com/friedow/kirito#readme",
   "dependencies": {
-    "@types/mongoose": "^5.3.7",
     "discord.js": "^11.4.2",
     "handlebars": "^4.0.10",
     "mongoose": "^5.4.3",
-    "pageres": "^5.0.2",
-    "screenshot-stream": "^4.2.0",
+    "puppeteer": "^1.13.0",
     "tsconfig-paths": "^3.4.2",
     "winston": "^2.4.0"
   },
   "devDependencies": {
+    "@types/mongoose": "^5.3.7",
     "nodemon": "^1.17.5",
     "ts-node": "^7.0.0",
     "tslint": "^5.10.0",
