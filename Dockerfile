@@ -9,8 +9,10 @@ RUN npm install && \
     mv ./package.json ./builder/package.json && \
     mv ./src/interface ./builder/build/interface
 
-FROM timbru31/node-chrome:alpine
-WORKDIR /usr/src/app
+FROM zenato/puppeteer
+USER root
 COPY --from=builder /usr/src/kirito/builder .
-RUN npm install --production
+RUN npm install --production && \
+    chown -R pptruser:pptruser /build
+USER pptruser
 CMD npm run production
