@@ -9,8 +9,8 @@ RUN npm install && \
     mv ./package.json ./builder/package.json && \
     mv ./src/interface ./builder/build/interface
 
-FROM node:alpine
-WORKDIR /usr/src/kirito
+FROM timbru31/node-chrome:alpine
+WORKDIR /usr/src/app
 COPY --from=builder /usr/src/kirito/builder .
 RUN npm install --production
 CMD npm run production
