@@ -39,11 +39,13 @@ export default class ToplistPlugin extends Plugin {
   }
 
   private async getToplist(guild: Discord.Guild): Promise<string> {
-    const users = await UserModel.find({ guilds: { $elemMatch: { guildId: guild.id } } }).exec();
+    let users = await UserModel.find({ guilds: { $elemMatch: { guildId: guild.id } } }).exec();
 
     for (const user of users) {
       user.fetchUser(this.discord);
     }
+
+    users = users.sort((a, b) => b.experience - a.experience);
 
     const toplist: Toplist = {
       guild,
