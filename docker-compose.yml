@@ -11,6 +11,8 @@ services:
         image: mongo:latest
         networks:
             - kirito-network
+        volumes:
+            - /usr/src/kirito:/data/db
 networks:
     kirito-network:
         driver: overlay
