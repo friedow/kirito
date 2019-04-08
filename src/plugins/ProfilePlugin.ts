@@ -42,7 +42,7 @@ export default class ProfilePlugin extends Plugin {
       user = await UserModel.create(new User(discordUser.id, []));
     }
 
-    user.fetchUser(this.discord);
+    user.fetchData(this.discord);
 
     return TemplateUtil.getProfilePng(user);
   }

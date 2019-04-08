@@ -49,10 +49,11 @@ export default class User {
     return userLevelExperience * 100 / currentLevelExperience;
   }
 
-  public fetchUser(discordClient: Discord.Client): void {
-    for (const guild of this.guilds) {
-      guild.discord = discordClient.guilds.find((g) => g.id === guild.guildId);
-    }
+  public fetchData(discordClient: Discord.Client): void {
     this.discord = discordClient.users.find((u) => u.id === this.userId);
+
+    for (const guild of this.guilds) {
+      guild.fetchData(discordClient);
+    }
   }
 }

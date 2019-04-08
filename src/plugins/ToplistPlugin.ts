@@ -42,7 +42,7 @@ export default class ToplistPlugin extends Plugin {
     const users = await UserModel.find({ guilds: { $elemMatch: { guildId: guild.id } } }).exec();
 
     for (const user of users) {
-      user.fetchUser(this.discord);
+      user.fetchData(this.discord);
     }
 
     const toplist: Toplist = {
