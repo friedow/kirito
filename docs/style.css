@@ -27,6 +27,7 @@ h6 {
 h1,
 h2 {
   font-size: 150px;
+  word-break: break-all;
 }
 
 h2 {
@@ -45,11 +46,12 @@ a {
 }
 
 p,
-td {
+td,
+strong {
   font-size: 22px;
 }
 
-p {
+p, strong {
   max-width: 700px;
   line-height: 1.4em;
 }
@@ -99,6 +101,10 @@ nav a {
 
 /***** CONTENT *****/
 
+main {
+  min-height: 100vh;
+}
+
 main section {
   width: 100%;
   height: 100vh;
@@ -134,4 +140,33 @@ table td {
 
 table tr:last-child td {
   border-bottom: none;
+}
+
+/***** IMPRESSUM *****/
+
+.impressum {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.impressum h1 {
+  font-size: 60px;
+  margin-top: 150px;
+  margin-bottom: 50px;
+}
+
+.impressum h2 {
+  font-size: 25px;
+  margin-bottom: 20px;
+}
+
+.impressum p,
+.impressum strong {
+  font-size: 16px;
+}
+
+.content {
+  width: 700px;
+  max-width: 100%;
 }
