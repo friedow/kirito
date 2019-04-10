@@ -3,72 +3,110 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
+  <meta charset="utf-8">
 
-    <title>Kirito | Discord Leveling System</title>
-    <meta name="description" content="Kirito | Discord Leveling System">
-    <meta name="author" content="Christian Friedow">
+  <title>Kirito | Discord Leveling System</title>
+  <meta name="description" content="Kirito | Discord Leveling System">
+  <meta name="author" content="Christian Friedow">
 
-    <link rel="stylesheet" href="style.css?v=1.0">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="favicon.png" sizes="96x96">
+  <link rel="apple-touch-icon" href="favicon.png" sizes="180x180">
+
+  <link rel="stylesheet" href="style.css?v=1.0">
 </head>
 
 <body>
-    <header>
-        <div class="logo-container">
-            <a href="#">
-                <img class="icon" src="img/kirito.svg" />
-            </a>
-        </div>
-
-        <nav>
-            <a href="#">
-                Kirito
-            </a>
-            <a href="#commands">
-                Commands
-            </a>
-        </nav>
-
-    </header>
-
-    <div class="row">
-        <h1>Kirito</h1>
-        <h2>Discord Leveling System</h2>
-        <div class="icon-container">
-            <a
-                href="https://discordapp.com/api/oauth2/authorize?client_id=340419258045562882&permissions=402705408&scope=bot">
-                <img class="icon" src="img/discord.svg" />
-            </a>
-            <a href="https://discordbots.org/bot/340419258045562882">
-                <img class="icon" src="img/discordbots.svg" />
-            </a>
-            <a href="https://github.com/friedow/kirito">
-                <img class="icon" src="img/github.svg" />
-            </a>
-        </div>
+  <header>
+    <div class="logo-container">
+      <a href="/#">
+        <img class="icon" src="img/kirito.svg" />
+      </a>
     </div>
 
-    <div class="row" id="commands">
-        <h1>Commands</h1>
-        <table>
-            <tr>
-                <td>ping</td>
-                <td>Starts an ultra rapid fire table tennis match.</td>
-            </tr>
-            <tr>
-                <td>help</td>
-                <td>Shows a list of commands.</td>
-            </tr>
-            <tr>
-                <td>profile</td>
-                <td>Displays your profile.</td>
-            </tr>
-            <tr>
-                <td>toplist</td>
-                <td>Displays the servers player ranking.</td>
-            </tr>
-        </table>
-    </div>
+    <nav>
+      <a href="/#">
+        Kirito
+      </a>
+      <a href="/#commands">
+        Commands
+      </a>
+      <a href="/#experience">
+        Experience
+      </a>
+    </nav>
+
+  </header>
+
+  <main>
+
+    <section>
+      <h1>Kirito</h1>
+      <h2 class="subtitle">Discord Leveling System</h2>
+      <div class="icon-container">
+        <a
+          href="https://discordapp.com/api/oauth2/authorize?client_id=340419258045562882&permissions=402705408&scope=bot">
+          <img class="icon" src="img/discord.svg" />
+        </a>
+        <a href="https://discordbots.org/bot/340419258045562882">
+          <img class="icon" src="img/discordbots.svg" />
+        </a>
+        <a href="https://github.com/friedow/kirito">
+          <img class="icon" src="img/github.svg" />
+        </a>
+      </div>
+    </section>
+
+    <section id="commands">
+      <h2>Commands</h2>
+      <table>
+        <tr>
+          <td>ping</td>
+          <td>Starts an ultra rapid fire table tennis match.</td>
+        </tr>
+        <tr>
+          <td>help</td>
+          <td>Shows a list of commands.</td>
+        </tr>
+        <tr>
+          <td>profile</td>
+          <td>Displays your profile.</td>
+        </tr>
+        <tr>
+          <td>toplist</td>
+          <td>Displays the servers player ranking.</td>
+        </tr>
+      </table>
+    </section>
+
+    <section id="experience">
+      <h2>Experience</h2>
+      <p>
+        Experience is rewarded to users contributing in voice channels of a server. For each
+        minute a user spends inside a voice channel, one experience is rewarded to this user.
+        The accumulated experience value of a user determines his level. Therefore, users with
+        a higher level spend more time participating in active voice communication on discord
+        servers.
+      </p>
+    </section>
+
+  </main>
+
+  <footer>
+    <span class="copyright">
+      Copyright Christian Friedow
+    </span>
+
+    <nav>
+      <a href="/impressum">
+        Impressum
+      </a>
+      <a href="/datenschutz">
+        Datenschutz
+      </a>
+    </nav>
+  </footer>
 </body>
 
 </html>
