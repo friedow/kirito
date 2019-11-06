@@ -1,4 +1,4 @@
-FROM node:alpine AS builder
+FROM node:10-alpine AS builder
 WORKDIR /usr/src/kirito
 COPY . .
 RUN npm install && \
