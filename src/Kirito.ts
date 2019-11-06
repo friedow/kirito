@@ -59,6 +59,7 @@ export default class Kirito {
 
     // Subscribe to events
     this.discord.on('ready', this.prepareBot);
+    this.discord.on('error', winston.error);
     winston.info(`Successfully subscribed to discord events.`);
   }
 }
