@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/friedow/kirito#readme",
   "dependencies": {
-    "discord.js": "^11.4.2",
+    "discord.js": "^11.5.1",
     "handlebars": "^4.0.10",
     "mongoose": "^5.4.3",
     "puppeteer": "^1.13.0",
