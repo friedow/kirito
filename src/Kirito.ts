@@ -18,7 +18,7 @@ export default class Kirito {
   public async run() {
     await this.connectToDatabase();
     winston.info(`Successfully connected to mongoDB.`);
-    await this.subscribeToDiscordEvents();
+    this.subscribeToDiscordEvents();
     await this.connectToDiscord();
     this.plugins.push(new ConversationPlugin(this.discord));
     this.plugins.push(new ExperiencePlugin(this.discord));

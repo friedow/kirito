@@ -2,8 +2,6 @@ import Discord from 'discord.js';
 import winston from 'winston';
 import UserModel from '@/models/UserModel';
 import User from '@/utils/User';
-import Guild from '@/utils/Guild';
-import GuildWithExperience from '@/interfaces/GuildWithExperience';
 import Plugin from './Plugin';
 import TemplateUtil from '@/utils/TemplateUtils';
 
